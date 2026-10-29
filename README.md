@@ -63,7 +63,7 @@ Die Reihenfolge folgt dem Workshop, die Übungen werden von oben nach unten schw
 | 11 | Tag 2 | `ms-sagas` | Sagas ersetzen verteilte Transaktionen | [exercises/ms-sagas](exercises/ms-sagas/) | 25 Min |
 | 12 | Tag 2 | `ms-resilience` | Timeouts, Retries und Idempotenz gehören zusammen | [exercises/ms-resilience](exercises/ms-resilience/) | 25 Min |
 | 13 | Tag 2 | `ms-observability` | Ein Request, eine Trace-ID durch alle Services | [exercises/ms-observability](exercises/ms-observability/) | 20 Min |
-| 14 | Tag 2 | `ms-contract-testing` | Contract Tests statt End-to-End-Zoo | [exercises/ms-contract-testing](exercises/ms-contract-testing/) | 25 Min |
+| 14 | Tag 2 | `ms-contract-testing` | Contract-Tests statt End-to-End-Zoo | [exercises/ms-contract-testing](exercises/ms-contract-testing/) | 25 Min |
 
 ### Zusatzkapitel
 
