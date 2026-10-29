@@ -121,7 +121,7 @@ Jedes Paket muss seinen Platz verdienen. Mehr brauchst du nicht:
 | `typescript`, `@types/node`, `@types/express` | Typprüfung |
 
 Bewusst ohne Zusatzpaket: SQLite (`node:sqlite`), HTTP-Client (`fetch`), Tokens (`node:crypto` mit Ed25519),
-Trace Context (`AsyncLocalStorage`) und Messaging (Outbox per HTTP statt Broker). Im Produktivbetrieb ergänzt du dort,
+Trace Context (`AsyncLocalStorage`) und Messaging (Outbox per HTTP statt Broker). In Produktion ergänzt du dort,
 wo es trägt, zum Beispiel OpenTelemetry, einen Message Broker oder Pact.
 
 ## Workshop und Folien
