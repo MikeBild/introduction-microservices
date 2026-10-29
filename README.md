@@ -7,7 +7,7 @@ Daneben liegt der Werkstatt-Shop als laufendes System aus drei Services, das du 
 
 - Services an Fachgrenzen schneiden, mit eigenen Daten und eigenem Vertrag
 - Services über HTTP und Events verbinden: Outbox, Inbox und Sagas
-- Robust betreiben und testen: Timeouts, Retries, Trace-IDs, Contract Tests
+- Robust betreiben und testen: Timeouts, Retries, Trace-IDs, Contract-Tests
 
 ## Voraussetzungen
 
@@ -128,3 +128,7 @@ wo es trägt, zum Beispiel OpenTelemetry, einen Message Broker oder Pact.
 
 - Workshop: [„Microservices mit Node.js, Express 5 und Docker Compose“](https://workshops.mikebild.dev/w/microservices/remote/)
 - Folien: [slides.mikebild.dev/introduction-microservices](https://slides.mikebild.dev/introduction-microservices.html)
+
+## Lizenz
+
+[MIT](LICENSE)
