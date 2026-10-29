@@ -1,0 +1,14 @@
+{
+  "name": "@werkstatt/catalog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Service catalog: Produkte und Preise",
+  "type": "module",
+  "exports": {
+    ".": "./src/app.ts"
+  },
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "node --watch src/server.ts"
+  }
+}

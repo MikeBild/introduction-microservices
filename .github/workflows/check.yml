@@ -1,0 +1,25 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Typecheck (Lösungen, Services und Tests)
+        run: npm run typecheck
+      - name: Tests gegen die Lösungen
+        run: npm run test:solution
+      - name: Systemtest der drei Services ohne Docker
+        run: npm run test:system
+      - name: Compose-Datei prüfen
+        run: docker compose config --quiet

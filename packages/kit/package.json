@@ -1,0 +1,10 @@
+{
+  "name": "@werkstatt/kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kleine Helfer für Services und Tests: listen, Datenbank, JSON-Logs",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
