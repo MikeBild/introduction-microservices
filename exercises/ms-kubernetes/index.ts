@@ -3,7 +3,7 @@
 //
 // Kubernetes beschreibt den gewünschten Zustand: ein Deployment hält n Pods am Leben,
 // ein Service gibt ihnen einen stabilen Namen. Die Health Checks aus Compose werden zu Probes.
-// Mehr zu Images und Clustern: Workshop Container.
+// Mehr zu Images und Clustern: Workshop „Docker & Kubernetes“.
 //
 // Aufgabe: manifests(spec) liefert [Deployment, Service] für einen Service des Werkstatt-Shops.
 // 1. Deployment apps/v1: replicas (Default 2), Labels app.kubernetes.io/name und app.kubernetes.io/part-of: werkstatt,

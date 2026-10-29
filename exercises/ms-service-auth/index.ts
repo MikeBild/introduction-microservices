@@ -3,7 +3,7 @@
 //
 // orders ruft inventory auf. inventory soll nur Aufrufe annehmen, die nachweislich von orders kommen
 // und für inventory bestimmt sind. orders signiert ein kurzlebiges JWT mit seinem privaten Ed25519-Schlüssel,
-// inventory prüft es mit dem öffentlichen Schlüssel. Ohne Zusatz-Package: node:crypto kann EdDSA.
+// inventory prüft es mit dem öffentlichen Schlüssel. Ohne Zusatzpaket: node:crypto kann EdDSA.
 //
 // Aufgabe: requireServiceToken(options) als Middleware.
 // 1. Header Authorization: Bearer <header>.<payload>.<signature>. Fehlt er → 401.
