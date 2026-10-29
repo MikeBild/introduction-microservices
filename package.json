@@ -1,0 +1,46 @@
+{
+  "name": "introduction-microservices",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Übungen zum Workshop Microservices – durchgehendes Beispiel: Werkstatt-Shop",
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "imports": {
+    "#ex/*": {
+      "solution": "./exercises/*/solution/index.ts",
+      "default": "./exercises/*/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:solution": "vitest run --mode solution",
+    "test:system": "vitest run --mode system",
+    "typecheck": "tsc --noEmit",
+    "typecheck:start": "tsc --noEmit -p tsconfig.start.json",
+    "check": "npm run typecheck && npm run test:solution && npm run test:system",
+    "up": "docker compose up --build --wait",
+    "down": "docker compose down --volumes"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "homepage": "https://workshops.mikebild.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MikeBild/introduction-microservices.git"
+  }
+}

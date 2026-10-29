@@ -1,0 +1,10 @@
+{
+  "name": "@werkstatt/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gemeinsame Verträge des Werkstatt-Shops: zod-Schemas für APIs und Events",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

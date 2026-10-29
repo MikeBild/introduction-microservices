@@ -1,0 +1,50 @@
+# Der Werkstatt-Shop: drei Services, je mit eigener Datenbank (Volume) und Health Check.
+# Starten: npm run up   ·   Stoppen: npm run down
+name: werkstatt
+
+x-healthcheck: &healthcheck
+  interval: 5s
+  timeout: 2s
+  retries: 5
+  start_period: 5s
+
+services:
+  catalog:
+    build: { context: ., args: { SERVICE: catalog } }
+    environment: { PORT: '3001' }
+    ports: ['3001:3001']
+    volumes: ['catalog-data:/data']
+    healthcheck:
+      <<: *healthcheck
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3001/health/ready']
+
+  inventory:
+    build: { context: ., args: { SERVICE: inventory } }
+    environment:
+      PORT: '3003'
+      SUBSCRIBERS: http://orders:3002/inbox
+    ports: ['3003:3003']
+    volumes: ['inventory-data:/data']
+    healthcheck:
+      <<: *healthcheck
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3003/health/ready']
+
+  orders:
+    build: { context: ., args: { SERVICE: orders } }
+    environment:
+      PORT: '3002'
+      CATALOG_URL: http://catalog:3001
+      SUBSCRIBERS: http://inventory:3003/inbox
+    ports: ['3002:3002']
+    volumes: ['orders-data:/data']
+    depends_on:
+      catalog: { condition: service_healthy }
+      inventory: { condition: service_healthy }
+    healthcheck:
+      <<: *healthcheck
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3002/health/ready']
+
+volumes:
+  catalog-data:
+  inventory-data:
+  orders-data:
