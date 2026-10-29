@@ -1,4 +1,4 @@
-// Kleine Helfer ohne Zusatz-Package: node:http, node:sqlite und console reichen.
+// Kleine Helfer ohne Zusatzpaket: node:http, node:sqlite und console reichen.
 import type { AddressInfo } from 'node:net'
 import type { Server } from 'node:http'
 import { DatabaseSync } from 'node:sqlite'
@@ -71,5 +71,5 @@ export const eventually = async (check: () => boolean | Promise<boolean>, timeou
     if (await check()) return
     await new Promise((resolve) => setTimeout(resolve, stepMs))
   }
-  throw new Error(`Bedingung nicht erfüllt nach ${timeoutMs} ms`)
+  throw new Error(`Bedingung nach ${timeoutMs} ms nicht erfüllt. Prüfe, ob das Relay die Events zustellt, oder erhöhe timeoutMs.`)
 }

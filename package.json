@@ -38,7 +38,7 @@
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
   },
-  "homepage": "https://workshops.mikebild.dev",
+  "homepage": "https://workshops.mikebild.dev/w/microservices/remote/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MikeBild/introduction-microservices.git"

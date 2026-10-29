@@ -1,4 +1,4 @@
-// Verträge des Werkstatt-Shops (siehe docs/beispiel-domaene.md).
+// Verträge des Werkstatt-Shops (siehe README, Abschnitt „Der Werkstatt-Shop“).
 // Ein Vertrag gehört dem Service, der ihn anbietet. Hier liegen nur die veröffentlichten
 // Teile: Request- und Response-Bodys der APIs und die Events zwischen den Services.
 import { z } from 'zod'
