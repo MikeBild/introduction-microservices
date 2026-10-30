@@ -1,6 +1,6 @@
 // Lösung ms-first-service
 import express from 'express'
-import type { DatabaseSync } from 'node:sqlite'
+import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'
 import type { Product } from '@werkstatt/contracts'
 
@@ -10,7 +10,7 @@ export const openCatalogDb = (path = ':memory:') =>
 type Row = { id: string; name: string; price_cents: number }
 const toProduct = (row: Row): Product => ({ id: row.id, name: row.name, priceCents: row.price_cents })
 
-export const createCatalogApp = ({ db }: { db: DatabaseSync }) => {
+export const createCatalogApp = ({ db }: { db: Database }) => {
   const app = express()
   app.disable('x-powered-by')
 

@@ -1,12 +1,12 @@
 // Lösung ms-data-ownership
-import type { DatabaseSync } from 'node:sqlite'
+import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'
 
 export type ProductChanged = { productId: string; name: string; priceCents: number; version: number }
 export type ProductView = { productId: string; name: string; priceCents: number }
 
 /** orders hält eine eigene Kopie der Produktdaten, die es braucht – gefüllt aus Events von catalog. */
-export const createProductReplica = (db: DatabaseSync = openDb(':memory:', '')) => {
+export const createProductReplica = (db: Database = openDb(':memory:', '')) => {
   db.exec(`CREATE TABLE IF NOT EXISTS product_view (
     product_id TEXT PRIMARY KEY, name TEXT NOT NULL, price_cents INTEGER NOT NULL, version INTEGER NOT NULL)`)
   const upsert = db.prepare(`

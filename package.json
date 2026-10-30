@@ -5,7 +5,7 @@
   "description": "Übungen zum Workshop Microservices – durchgehendes Beispiel: Werkstatt-Shop",
   "type": "module",
   "engines": {
-    "node": ">=26"
+    "node": ">=26.11"
   },
   "workspaces": [
     "packages/*",

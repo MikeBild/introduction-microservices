@@ -12,13 +12,13 @@
 // 3. get(productId): ProductView oder undefined.
 //
 // Prüfen: npm test -- ms-data-ownership
-import type { DatabaseSync } from 'node:sqlite'
+import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'
 
 export type ProductChanged = { productId: string; name: string; priceCents: number; version: number }
 export type ProductView = { productId: string; name: string; priceCents: number }
 
-export const createProductReplica = (db: DatabaseSync = openDb(':memory:', '')) => {
+export const createProductReplica = (db: Database = openDb(':memory:', '')) => {
   // TODO: Tabelle product_view anlegen
   return {
     apply(change: ProductChanged): boolean {

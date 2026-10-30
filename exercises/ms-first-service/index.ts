@@ -9,13 +9,13 @@
 //
 // Prüfen: npm test -- ms-first-service
 import express from 'express'
-import type { DatabaseSync } from 'node:sqlite'
+import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'
 
 export const openCatalogDb = (path = ':memory:') =>
   openDb(path, 'CREATE TABLE IF NOT EXISTS products (id TEXT PRIMARY KEY, name TEXT NOT NULL, price_cents INTEGER NOT NULL)')
 
-export const createCatalogApp = ({ db }: { db: DatabaseSync }) => {
+export const createCatalogApp = ({ db }: { db: Database }) => {
   const app = express()
   app.disable('x-powered-by')
 

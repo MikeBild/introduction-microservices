@@ -1,7 +1,7 @@
 // Kleine Helfer ohne Zusatzpaket: node:http, node:sqlite und console reichen.
 import type { AddressInfo } from 'node:net'
 import type { Server } from 'node:http'
-import { DatabaseSync } from 'node:sqlite'
+import { Database } from 'node:sqlite'
 import { Router } from 'express'
 
 export { enqueue, firstDelivery, messagingSchema, relayOnce, startRelay } from './messaging.ts'
@@ -39,15 +39,15 @@ export const listen = (app: Listenable, port = 0): Promise<Running> =>
   })
 
 /** Öffnet eine SQLite-Datenbank (Datei oder ':memory:') und legt das Schema an. */
-export const openDb = (path: string, schema: string): DatabaseSync => {
-  const db = new DatabaseSync(path)
+export const openDb = (path: string, schema: string): Database => {
+  const db = new Database(path)
   db.exec('PRAGMA journal_mode = WAL;')
   db.exec(schema)
   return db
 }
 
 /** Führt fn in einer Transaktion aus: alles oder nichts. */
-export const transaction = <T>(db: DatabaseSync, fn: () => T): T => {
+export const transaction = <T>(db: Database, fn: () => T): T => {
   db.exec('BEGIN')
   try {
     const result = fn()
