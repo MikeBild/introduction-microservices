@@ -3,7 +3,7 @@
 //
 // Eine Bestellung läuft durch drei Services: orders → inventory (Bestand) → payment (Zahlung).
 // Es gibt keine Transaktion über alle. Die Saga in orders reagiert auf Nachrichten und löst
-// Folgeschritte oder Kompensationen aus. Sie ist eine reine Funktion: Zustand + Nachricht → Zustand + Effekte.
+// Folgeschritte oder Kompensationen aus. Sie ist eine Pure Function: Zustand + Nachricht → Zustand + Effekte.
 //
 // Aufgabe: Implementiere react(state, message).
 // - StockReserved (placed, Bestand pending)  → stock 'reserved', Effekt CapturePayment

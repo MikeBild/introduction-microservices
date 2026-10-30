@@ -18,7 +18,7 @@ export type Effect =
 
 export const start = (orderId: string): SagaState => ({ orderId, status: 'placed', stock: 'pending' })
 
-/** Reine Funktion: alter Zustand + Nachricht → neuer Zustand + Effekte. Kein I/O, gut testbar. */
+/** Pure Function: alter Zustand + Nachricht → neuer Zustand + Effekte. Kein I/O, gut testbar. */
 export const react = (state: SagaState, message: SagaMessage): { state: SagaState; effects: Effect[] } => {
   const { orderId } = state
   switch (message.type) {
