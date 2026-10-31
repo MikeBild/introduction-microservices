@@ -11,7 +11,7 @@ Daneben liegt der Werkstatt-Shop als laufendes System aus drei Services, das du 
 
 ## Voraussetzungen
 
-- **Node.js 26.11 oder neuer** – `nvm install` holt die neueste Version der Reihe aus [`.nvmrc`](.nvmrc).
+- **Node.js 26** – `nvm use` liest die Version aus [`.nvmrc`](.nvmrc).
 - **Docker** mit Compose für das Gesamtsystem.
 
 ## Einrichten
