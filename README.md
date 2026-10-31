@@ -74,6 +74,8 @@ Die Zusatzkapitel kannst du nach dem Workshop machen.
 | 15 | `ms-kubernetes` | Was ändert sich von Compose zu Kubernetes? | [exercises/ms-kubernetes](exercises/ms-kubernetes/) | 20 Min |
 | 16 | `ms-micro-frontends` | Micro-Frontends schneiden das UI wie die Services | [exercises/ms-micro-frontends](exercises/ms-micro-frontends/) | 20 Min |
 | 17 | `ms-service-auth` | Services prüfen, wer sie aufruft | [exercises/ms-service-auth](exercises/ms-service-auth/) | 25 Min |
+| 18 | `ms-context-cut` | Ein Service je Bounded Context, nicht je Entity | [exercises/ms-context-cut](exercises/ms-context-cut/) | 25 Min |
+| 19 | `ms-rest-ddd` | Eine REST-API spricht die Sprache ihres Bounded Context | [exercises/ms-rest-ddd](exercises/ms-rest-ddd/) | 25 Min |
 
 Event Sourcing steht im Workshop als Zusatzkapitel aus dem Architektur-Bestand. Die Übung dazu liegt in
 [introduction-nodejs](https://github.com/MikeBild/introduction-nodejs/tree/HEAD/EXAMPLES/ARCHITECTURE/event-sourcing).
