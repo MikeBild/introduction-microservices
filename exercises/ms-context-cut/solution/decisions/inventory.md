@@ -4,7 +4,7 @@
 
 | Frage                                  | Antwort                                                              |
 |----------------------------------------|----------------------------------------------------------------------|
-| Kippt an der Grenze ein Wort?          | Ja: „Product“ ist hier Bestand und Lagerort, kein Preis              |
+| Wechselt ein Wort die Bedeutung?       | Ja: „Product“ ist hier Bestand und Lagerort, kein Preis              |
 | Müssen Regeln sofort gemeinsam gelten? | Ja: Eine Reservierung ändert den Bestand in derselben Transaktion    |
 | Ändert es sich meist im selben Commit? | Ja: StockItem und Reservation ändern sich zusammen                   |
 | Eigenes Team oder eigene Last?         | Ja: Das Lager bindet das alte Warenwirtschaftssystem an              |

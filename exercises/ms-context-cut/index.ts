@@ -14,7 +14,7 @@
 //
 // | Frage                                  | ja              | nein          |
 // |----------------------------------------|-----------------|---------------|
-// | Kippt an der Grenze ein Wort?          | weiter prüfen   | Modul         |
+// | Wechselt ein Wort die Bedeutung?       | weiter prüfen   | Modul         |
 // | Müssen Regeln sofort gemeinsam gelten? | Modul           | weiter prüfen |
 // | Ändert es sich meist im selben Commit? | Modul           | weiter prüfen |
 // | Eigenes Team oder eigene Last?         | eigener Service | Modul         |

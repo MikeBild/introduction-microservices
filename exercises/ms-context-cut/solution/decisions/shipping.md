@@ -4,7 +4,7 @@
 
 | Frage                                  | Antwort                                                              |
 |----------------------------------------|----------------------------------------------------------------------|
-| Kippt an der Grenze ein Wort?          | Ja: „Bestellung“ ist hier ein Paket mit Adresse, ohne Preis          |
+| Wechselt ein Wort die Bedeutung?       | Ja: „Bestellung“ ist hier ein Paket mit Adresse, ohne Preis          |
 | Müssen Regeln sofort gemeinsam gelten? | Nein: Eine Sendung entsteht erst nach der Bezahlung                  |
 | Ändert es sich meist im selben Commit? | Nein: Paketdienste und Etiketten ändern sich ohne Verkaufscode       |
 | Eigenes Team oder eigene Last?         | Ja: Das Versandteam deployt täglich und rechnet nachts Etiketten     |

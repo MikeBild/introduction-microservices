@@ -4,12 +4,12 @@ Leg je Context eine Datei `decisions/<context>.md` an, der Name ist der Schlüss
 
 ## Kontext
 
-Welche Antworten gibt der Schnitt-Check? Welches Wort kippt hier, welche Regeln müssen sofort
+Welche Antworten gibt der Schnitt-Check? Welches Wort wechselt hier die Bedeutung, welche Regeln müssen sofort
 gemeinsam gelten, was ändert sich meist zusammen, gibt es ein eigenes Team oder eine eigene Last?
 
 | Frage                                  | Antwort |
 |----------------------------------------|---------|
-| Kippt an der Grenze ein Wort?          |         |
+| Wechselt ein Wort die Bedeutung?       |         |
 | Müssen Regeln sofort gemeinsam gelten? |         |
 | Ändert es sich meist im selben Commit? |         |
 | Eigenes Team oder eigene Last?         |         |
