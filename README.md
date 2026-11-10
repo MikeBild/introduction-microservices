@@ -130,6 +130,7 @@ wo es trägt, zum Beispiel OpenTelemetry, einen Message Broker oder Pact.
 
 - Workshop: [„Microservices mit Node.js, Express 5 und Docker Compose“](https://workshops.mikebild.dev/w/microservices/remote/)
 - Folien: [slides.mikebild.dev/introduction-microservices](https://slides.mikebild.dev/introduction-microservices.html)
+- PDF: [slides.mikebild.dev/introduction-microservices.pdf](https://slides.mikebild.dev/introduction-microservices.pdf)
 
 ## Lizenz
 
