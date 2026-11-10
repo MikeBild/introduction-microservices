@@ -2,7 +2,7 @@
   "name": "@werkstatt/kit",
   "version": "1.0.0",
   "private": true,
-  "description": "Kleine Helfer für Services und Tests: listen, Datenbank, JSON-Logs",
+  "description": "Small helpers for services and tests: listen, database, JSON logs",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

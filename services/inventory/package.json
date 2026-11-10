@@ -2,7 +2,7 @@
   "name": "@werkstatt/inventory",
   "version": "1.0.0",
   "private": true,
-  "description": "Service inventory: Bestand und Reservierungen",
+  "description": "Service inventory: stock and reservations",
   "type": "module",
   "exports": {
     ".": "./src/app.ts"
