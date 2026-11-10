@@ -1,18 +1,18 @@
-// Lektion ms-kubernetes: Was ändert sich von Compose zu Kubernetes?
-// Dauer: etwa 20 Minuten
+// Lesson ms-kubernetes: What changes from Compose to Kubernetes?
+// Duration: about 20 minutes
 //
-// Kubernetes beschreibt den gewünschten Zustand: ein Deployment hält n Pods am Leben,
-// ein Service gibt ihnen einen stabilen Namen. Die Health Checks aus Compose werden zu Probes.
-// Mehr zu Images und Clustern: Workshop „Docker & Kubernetes“.
+// Kubernetes describes the desired state: a Deployment keeps n Pods alive,
+// a Service gives them a stable name. The health checks from Compose become probes.
+// More on images and clusters: workshop “Docker & Kubernetes”.
 //
-// Aufgabe: manifests(spec) liefert [Deployment, Service] für einen Service des Werkstatt-Shops.
-// 1. Deployment apps/v1: replicas (Default 2), Labels app.kubernetes.io/name und app.kubernetes.io/part-of: werkstatt,
-//    selector passend, ein Container mit image, containerPort, env PORT plus spec.env.
-// 2. readinessProbe auf /health/ready, livenessProbe auf /health/live (httpGet auf den Port).
-// 3. resources: requests cpu 50m und memory 64Mi, limits memory 256Mi.
-// 4. Service v1: selector auf app.kubernetes.io/name, Port 80 → targetPort.
+// Task: manifests(spec) returns [Deployment, Service] for one service of the workshop shop.
+// 1. Deployment apps/v1: replicas (default 2), labels app.kubernetes.io/name and app.kubernetes.io/part-of: werkstatt,
+//    a matching selector, one container with image, containerPort, env PORT plus spec.env.
+// 2. readinessProbe on /health/ready, livenessProbe on /health/live (httpGet on the port).
+// 3. resources: requests cpu 50m and memory 64Mi, limits memory 256Mi.
+// 4. Service v1: selector on app.kubernetes.io/name, port 80 → targetPort.
 //
-// Prüfen: npm test -- ms-kubernetes   und   node exercises/ms-kubernetes/solution/index.ts > catalog.json
+// Check: npm test -- ms-kubernetes   and   node exercises/ms-kubernetes/solution/index.ts > catalog.json
 export type ServiceSpec = { name: string; image: string; port: number; replicas?: number; env?: Record<string, string> }
 
 export const manifests = (spec: ServiceSpec): Array<Record<string, unknown>> => {

@@ -1,17 +1,17 @@
-// Lektion ms-outbox: Speichern und Veröffentlichen in einer Transaktion
-// Dauer: etwa 25 Minuten
+// Lesson ms-outbox: Save and publish in one transaction
+// Duration: about 25 minutes
 //
-// Dual Write: Speichert orders die Bestellung und schickt danach das Event, kann der Prozess
-// dazwischen abstürzen. Die Outbox schreibt das Event in dieselbe Datenbank, in derselben Transaktion.
-// Ein Relay veröffentlicht später alles, was noch offen ist.
+// Dual write: if orders saves the order and sends the event afterwards, the process can
+// crash in between. The outbox writes the event into the same database, in the same transaction.
+// A relay later publishes everything that is still pending.
 //
-// Aufgabe:
-// 1. placeOrder(order): INSERT in orders und INSERT des Events OrderPlaced in outbox in einer Transaktion
-//    (transaction aus @werkstatt/kit). Scheitert ein Teil, steht keiner von beiden in der Datenbank.
-// 2. relay(publish): offene Events nach seq lesen, publish aufrufen, erst danach published_at setzen.
-//    Beim ersten Fehler abbrechen – der Rest bleibt für den nächsten Lauf. Rückgabe: Anzahl veröffentlicht.
+// Task:
+// 1. placeOrder(order): INSERT into orders and INSERT of the OrderPlaced event into outbox in one transaction
+//    (transaction from @werkstatt/kit). If one part fails, neither of them is in the database.
+// 2. relay(publish): read pending events by seq, call publish, set published_at only afterwards.
+//    Stop at the first error – the rest stays for the next run. Returns: number published.
 //
-// Prüfen: npm test -- ms-outbox
+// Check: npm test -- ms-outbox
 import { randomUUID } from 'node:crypto'
 import { openDb, transaction } from '@werkstatt/kit'
 import type { Order, ShopEvent } from '@werkstatt/contracts'
@@ -27,9 +27,9 @@ export const createOrderStore = (path = ':memory:') => {
 
   return {
     placeOrder(order: Order): void {
-      // Fallstrick: zwei getrennte Schreibvorgänge ohne Transaktion
+      // Pitfall: two separate writes without a transaction
       db.prepare('INSERT INTO orders (id, body) VALUES (?, ?)').run(order.id, JSON.stringify(order))
-      // TODO: Event OrderPlaced in die outbox, beides in einer Transaktion
+      // TODO: OrderPlaced event into the outbox, both in one transaction
     },
 
     async relay(publish: (event: ShopEvent) => Promise<void>, batchSize = 100): Promise<number> {

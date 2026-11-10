@@ -1,4 +1,4 @@
-// Lösung ms-micro-frontends
+// Reference solution ms-micro-frontends
 import express from 'express'
 
 export type GatewayOptions = { template: string; fragments: Record<string, string>; timeoutMs?: number }
@@ -14,7 +14,7 @@ const fetchFragment = async (url: string, timeoutMs: number): Promise<string | u
   }
 }
 
-/** Serverseitige Komposition: Fragmente parallel laden, ein langsames Team blockiert nicht die Seite. */
+/** Server-side composition: load fragments in parallel, a slow team does not block the page. */
 export const composePage = async ({ template, fragments, timeoutMs = 300 }: GatewayOptions) => {
   const names = [...new Set([...template.matchAll(placeholder)].map((match) => match[1] ?? ''))]
   const loaded = new Map(

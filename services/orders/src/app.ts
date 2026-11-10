@@ -1,5 +1,5 @@
-// Service orders: nimmt Bestellungen an, holt Preise synchron aus catalog und steuert die Saga
-// über Events: OrderPlaced → StockReserved | StockRejected → ggf. OrderCancelled.
+// Service orders: accepts orders, fetches prices synchronously from catalog and drives the saga
+// via events: OrderPlaced → StockReserved | StockRejected → OrderCancelled if needed.
 import express from 'express'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'

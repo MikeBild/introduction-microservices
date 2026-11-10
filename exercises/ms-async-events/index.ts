@@ -1,17 +1,17 @@
-// Lektion ms-async-events: Events entkoppeln Zeit und Verfügbarkeit
-// Dauer: etwa 25 Minuten
+// Lesson ms-async-events: Events decouple time and availability
+// Duration: about 25 minutes
 //
-// inventory empfängt Events per HTTP auf POST /inbox. Zustellung heißt „at least once“:
-// Dasselbe Event kann mehrfach ankommen. Die Inbox sorgt dafür, dass es nur einmal wirkt.
+// inventory receives events via HTTP on POST /inbox. Delivery means “at least once”:
+// the same event can arrive more than once. The inbox makes sure it takes effect only once.
 //
-// Aufgabe:
-// 1. POST /inbox prüft den Body mit ShopEvent aus @werkstatt/contracts. Ungültig → 400.
-// 2. Merke die Event-ID in der Tabelle inbox. War sie schon da → 200 mit { duplicate: true }, sonst 202.
-// 3. Bei OrderPlaced: Reicht der Bestand für alle Positionen, erhöhe reserved je Position
-//    und speichere die Reservierung 'reserved', sonst nur 'rejected' – nie eine halbe Reservierung.
-// 4. Inbox-Eintrag und Wirkung laufen in einer Transaktion (transaction aus @werkstatt/kit).
+// Task:
+// 1. POST /inbox validates the body with ShopEvent from @werkstatt/contracts. Invalid → 400.
+// 2. Remember the event ID in the table inbox. If it was already there → 200 with { duplicate: true }, otherwise 202.
+// 3. On OrderPlaced: if the stock covers all line items, increase reserved per line item
+//    and store the reservation as 'reserved', otherwise only 'rejected' – never a partial reservation.
+// 4. The inbox entry and the effect run in one transaction (transaction from @werkstatt/kit).
 //
-// Prüfen: npm test -- ms-async-events
+// Check: npm test -- ms-async-events
 import express from 'express'
 import { openDb, transaction } from '@werkstatt/kit'
 import { ShopEvent } from '@werkstatt/contracts'
@@ -29,7 +29,7 @@ export const createInventory = (path = ':memory:') => {
   app.post('/inbox', (req, res) => {
     void ShopEvent
     void transaction
-    // TODO: prüfen, deduplizieren, OrderPlaced verarbeiten
+    // TODO: validate, deduplicate, handle OrderPlaced
     res.status(202).json({ duplicate: false })
   })
 

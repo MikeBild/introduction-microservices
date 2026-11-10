@@ -1,19 +1,19 @@
-// Lektion ms-observability: Ein Request, eine Trace-ID durch alle Services
-// Dauer: etwa 20 Minuten
+// Lesson ms-observability: One request, one trace ID across all services
+// Duration: about 20 minutes
 //
-// Ohne gemeinsame ID suchst du einen Fehler in drei Logs gleichzeitig. Der Standard dafür ist
-// W3C Trace Context: der Header traceparent = 00-<trace-id, 32 hex>-<parent-id, 16 hex>-<flags, 2 hex>.
+// Without a shared ID you search for an error in three logs at once. The standard for this is
+// W3C Trace Context: the header traceparent = 00-<trace-id, 32 hex>-<parent-id, 16 hex>-<flags, 2 hex>.
 //
-// Aufgabe:
-// 1. parseTraceparent(header): gültiger Header → { traceId, spanId }, sonst undefined
-//    (falsches Format, Großbuchstaben, nur Nullen).
-// 2. tracing (Middleware): Trace-ID vom Aufrufer übernehmen oder neu erzeugen (randomBytes(16)),
-//    immer eine neue spanId (randomBytes(8)). Kontext mit AsyncLocalStorage für den Request speichern,
-//    traceparent auch als Response-Header setzen.
-// 3. log(...): schreibt trace_id und span_id aus dem Kontext mit ins JSON.
-// 4. tracedFetch(url, init): setzt traceparent mit derselben traceId für den nächsten Service.
+// Task:
+// 1. parseTraceparent(header): valid header → { traceId, spanId }, otherwise undefined
+//    (wrong format, uppercase letters, only zeros).
+// 2. tracing (middleware): take over the trace ID from the caller or create a new one (randomBytes(16)),
+//    always a new spanId (randomBytes(8)). Store the context with AsyncLocalStorage for the request,
+//    and also set traceparent as a response header.
+// 3. log(...): also writes trace_id and span_id from the context into the JSON.
+// 4. tracedFetch(url, init): sets traceparent with the same traceId for the next service.
 //
-// Prüfen: npm test -- ms-observability
+// Check: npm test -- ms-observability
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { randomBytes } from 'node:crypto'
 import type { RequestHandler } from 'express'
@@ -30,18 +30,18 @@ export const parseTraceparent = (header: string | undefined): TraceContext | und
 export const formatTraceparent = ({ traceId, spanId }: TraceContext) => `00-${traceId}-${spanId}-01`
 
 export const tracing: RequestHandler = (req, res, next) => {
-  // TODO: Kontext übernehmen oder erzeugen, mit storage.run(context, next) weitergeben
+  // TODO: take over or create the context, pass it on with storage.run(context, next)
   next()
 }
 
 export const currentTrace = () => storage.getStore()
 
 export const log = (level: 'info' | 'warn' | 'error', message: string, fields: Record<string, unknown> = {}) => {
-  // TODO: trace_id und span_id ergänzen
+  // TODO: add trace_id and span_id
   console.log(JSON.stringify({ time: new Date().toISOString(), level, message, ...fields }))
 }
 
 export const tracedFetch = (input: string, init: RequestInit = {}) => {
-  // Fallstrick: Der Trace endet an der Service-Grenze
+  // Pitfall: the trace ends at the service boundary
   return fetch(input, init)
 }

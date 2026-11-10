@@ -1,16 +1,16 @@
-// Lektion ms-why: Microservices lösen Teamprobleme, keine Codeprobleme
-// Dauer: etwa 15 Minuten
+// Lesson ms-why: Microservices solve team problems, not code problems
+// Duration: about 15 minutes
 //
-// Bevor du einen Service abtrennst, schau, was sich gemeinsam ändert. Module, die fast immer
-// im selben Commit landen, trennst du besser nicht – sonst wird aus einem Commit ein verteiltes Release.
+// Before you split off a service, look at what changes together. Modules that almost always
+// land in the same commit are better left together – otherwise one commit turns into a distributed release.
 //
-// Aufgabe:
-// 1. changeCoupling(commits): Zähle für jedes Modulpaar, wie oft es im selben Commit vorkommt (together).
-//    ratio = together / Anzahl Commits des selteneren Moduls. Doppelte Module in einem Commit zählen einmal.
-//    Sortiere absteigend nach ratio, bei Gleichstand nach together. Im Paar steht a alphabetisch vor b.
-// 2. keepTogether(commits, threshold = 0.5): alle Paare mit ratio >= threshold als [a, b].
+// Task:
+// 1. changeCoupling(commits): For each pair of modules, count how often it appears in the same commit (together).
+//    ratio = together / number of commits of the rarer module. Duplicate modules in one commit count once.
+//    Sort descending by ratio, ties by together. In a pair, a comes alphabetically before b.
+// 2. keepTogether(commits, threshold = 0.5): all pairs with ratio >= threshold as [a, b].
 //
-// Prüfen: npm test -- ms-why
+// Check: npm test -- ms-why
 export type Commit = { id: string; modules: readonly string[] }
 export type Coupling = { a: string; b: string; together: number; ratio: number }
 

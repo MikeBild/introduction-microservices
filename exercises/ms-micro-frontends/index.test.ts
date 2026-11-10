@@ -22,7 +22,7 @@ const teams = () =>
     })
 
 describe('gateway', () => {
-  it('setzt die Seite aus den Fragmenten der Teams zusammen', async () => {
+  it('assembles the page from the fragments of the teams', async () => {
     await using services = await listen(teams())
     await using gateway = await listen(
       createGateway({
@@ -37,7 +37,7 @@ describe('gateway', () => {
     )
   })
 
-  it('zeigt einen Fallback, wenn ein Fragment zu langsam ist', async () => {
+  it('shows a fallback when a fragment is too slow', async () => {
     await using services = await listen(teams())
     await using gateway = await listen(
       createGateway({
@@ -55,7 +55,7 @@ describe('gateway', () => {
     expect(html).toContain('<div data-fragment="cart" data-fallback></div>')
   })
 
-  it('zeigt einen Fallback bei Fehlern und unbekannten Fragmenten', async () => {
+  it('shows a fallback on errors and unknown fragments', async () => {
     await using services = await listen(teams())
     await using gateway = await listen(
       createGateway({ template, fragments: { cart: `${services.url}/orders/broken` } }),

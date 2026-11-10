@@ -1,137 +1,139 @@
-# Übungen: Microservices
+*English · [Deutsch](README.de.md)*
 
-Übungs-Repo zum Workshop „Microservices mit Node.js, Express 5 und Docker Compose“. Zu jeder Lektion gibt es eine kurze Übung mit Startpunkt, Tests und Lösung.
-Daneben liegt der Werkstatt-Shop als laufendes System aus drei Services, das du mit Docker Compose startest.
+# Exercises: Microservices
 
-## Was du lernst
+Exercise repository for the workshop “Microservices with Node.js, Express 5, and Docker Compose”. For each lesson there is a short exercise with a starting point, tests and a reference solution.
+Next to it sits the workshop shop as a running system of three services that you start with Docker Compose.
 
-- Services an Fachgrenzen schneiden, mit eigenen Daten und eigenem Vertrag
-- Services über HTTP und Events verbinden: Outbox, Inbox und Sagas
-- Robust betreiben und testen: Timeouts, Retries, Trace-IDs, Contract-Tests
+## What you learn
 
-## Voraussetzungen
+- Cut services along domain boundaries, each with its own data and its own contract
+- Connect services via HTTP and events: outbox, inbox and sagas
+- Run and test them robustly: timeouts, retries, trace IDs, contract tests
 
-- **Node.js 26** – `nvm use` liest die Version aus [`.nvmrc`](.nvmrc).
-- **Docker** mit Compose für das Gesamtsystem.
+## Prerequisites
 
-## Einrichten
+- **Node.js 26** – `nvm use` reads the version from [`.nvmrc`](.nvmrc).
+- **Docker** with Compose for the whole system.
+
+## Setup
 
 ```bash
 git clone https://github.com/MikeBild/introduction-microservices.git
 cd introduction-microservices
 nvm use
 npm ci
-npm run check    # Typecheck, Tests gegen die Lösungen, Systemtest der drei Services
+npm run check    # typecheck, tests against the reference solutions, system test of the three services
 ```
 
-Die CI führt dasselbe aus und prüft zusätzlich `compose.yaml` mit `docker compose config`.
+The CI runs the same and also checks `compose.yaml` with `docker compose config`.
 
-## So arbeitest du mit einer Übung
+## How to work on an exercise
 
-1. Öffne `exercises/<lektion>/index.ts`. Oben steht die Aufgabe, darunter der Startpunkt mit `TODO`s.
-2. Starte die Tests für diese Lektion:
+1. Open `exercises/<lesson>/index.ts`. The task is at the top, below it the starting point with `TODO`s.
+2. Run the tests for this lesson:
    ```bash
-   npm test -- ms-sync-http             # einmal
-   npm run test:watch -- ms-sync-http   # bei jeder Änderung neu
+   npm test -- ms-sync-http             # once
+   npm run test:watch -- ms-sync-http   # again on every change
    ```
-   Am Anfang sind die Tests rot. Du bist fertig, wenn sie grün sind.
-3. Hängst du fest, schau in `exercises/<lektion>/solution/`. Dieselben Tests laufen auch gegen die Lösung:
+   At first the tests are red. You are done when they are green.
+3. If you get stuck, look into `exercises/<lesson>/solution/`. The same tests also run against the reference solution:
    ```bash
    npm run test:solution -- ms-sync-http
    ```
 
-Wie die Umschaltung funktioniert: Die Tests importieren `#ex/<lektion>`. Die `imports` in der
-[`package.json`](package.json) zeigen damit auf `index.ts`, mit der Condition `solution` auf die Lösung.
-`npm run typecheck` prüft Lösungen, Services und Tests, `npm run typecheck:start` deinen Startpunkt.
+How the switch works: the tests import `#ex/<lesson>`. The `imports` in
+[`package.json`](package.json) point this to `index.ts`, and with the condition `solution` to the reference solution.
+`npm run typecheck` checks the reference solutions, services and tests, `npm run typecheck:start` checks your starting point.
 
-## Übungen
+## Exercises
 
-Die Reihenfolge folgt dem Workshop, die Übungen werden von oben nach unten schwerer.
+The order follows the workshop. The exercises get harder from top to bottom.
 
-| # | Tag | ID | Thema | Ordner | Dauer |
+| # | Day | ID | Topic | Folder | Duration |
 |---|---|---|---|---|---|
-| 1 | Tag 1 | `ms-why` | Microservices lösen Teamprobleme, keine Codeprobleme | [exercises/ms-why](exercises/ms-why/) | 15 Min |
-| 2 | Tag 1 | `ms-bounded-contexts` | Schneide an Sprachgrenzen, nicht an Tabellen | [exercises/ms-bounded-contexts](exercises/ms-bounded-contexts/) | 20 Min |
-| 3 | Tag 1 | `ms-modular-monolith` | Erst Module mit klaren Grenzen, dann Services | [exercises/ms-modular-monolith](exercises/ms-modular-monolith/) | 20 Min |
-| 4 | Tag 1 | `ms-first-service` | Ein Service, ein Prozess, eine Aufgabe | [exercises/ms-first-service](exercises/ms-first-service/) | 20 Min |
-| 5 | Tag 1 | `ms-api-contracts` | Der Vertrag gehört dem Service, der ihn anbietet | [exercises/ms-api-contracts](exercises/ms-api-contracts/) | 20 Min |
-| 6 | Tag 1 | `ms-sync-http` | Ein synchroner Aufruf koppelt die Verfügbarkeit | [exercises/ms-sync-http](exercises/ms-sync-http/) | 20 Min |
-| 7 | Tag 1 | `ms-docker-compose` | Das ganze System mit einem Befehl starten | [exercises/ms-docker-compose](exercises/ms-docker-compose/) | 25 Min |
-| 8 | Tag 2 | `ms-data-ownership` | Jeder Service besitzt seine Daten allein | [exercises/ms-data-ownership](exercises/ms-data-ownership/) | 20 Min |
-| 9 | Tag 2 | `ms-async-events` | Events entkoppeln Zeit und Verfügbarkeit | [exercises/ms-async-events](exercises/ms-async-events/) | 25 Min |
-| 10 | Tag 2 | `ms-outbox` | Speichern und Veröffentlichen in einer Transaktion | [exercises/ms-outbox](exercises/ms-outbox/) | 25 Min |
-| 11 | Tag 2 | `ms-sagas` | Sagas ersetzen verteilte Transaktionen | [exercises/ms-sagas](exercises/ms-sagas/) | 25 Min |
-| 12 | Tag 2 | `ms-resilience` | Timeouts, Retries und Idempotenz gehören zusammen | [exercises/ms-resilience](exercises/ms-resilience/) | 25 Min |
-| 13 | Tag 2 | `ms-observability` | Ein Request, eine Trace-ID durch alle Services | [exercises/ms-observability](exercises/ms-observability/) | 20 Min |
-| 14 | Tag 2 | `ms-contract-testing` | Contract-Tests statt End-to-End-Zoo | [exercises/ms-contract-testing](exercises/ms-contract-testing/) | 25 Min |
+| 1 | Day 1 | `ms-why` | Microservices solve team problems, not code problems | [exercises/ms-why](exercises/ms-why/) | 15 min |
+| 2 | Day 1 | `ms-bounded-contexts` | Cut at language boundaries, not tables | [exercises/ms-bounded-contexts](exercises/ms-bounded-contexts/) | 20 min |
+| 3 | Day 1 | `ms-modular-monolith` | Modules with clear boundaries before services | [exercises/ms-modular-monolith](exercises/ms-modular-monolith/) | 20 min |
+| 4 | Day 1 | `ms-first-service` | One service, one process, one task | [exercises/ms-first-service](exercises/ms-first-service/) | 20 min |
+| 5 | Day 1 | `ms-api-contracts` | The contract belongs to the service that offers it | [exercises/ms-api-contracts](exercises/ms-api-contracts/) | 20 min |
+| 6 | Day 1 | `ms-sync-http` | A synchronous call couples availability | [exercises/ms-sync-http](exercises/ms-sync-http/) | 20 min |
+| 7 | Day 1 | `ms-docker-compose` | Start the whole system with one command | [exercises/ms-docker-compose](exercises/ms-docker-compose/) | 25 min |
+| 8 | Day 2 | `ms-data-ownership` | Each service owns its data alone | [exercises/ms-data-ownership](exercises/ms-data-ownership/) | 20 min |
+| 9 | Day 2 | `ms-async-events` | Events decouple time and availability | [exercises/ms-async-events](exercises/ms-async-events/) | 25 min |
+| 10 | Day 2 | `ms-outbox` | Save and publish in one transaction | [exercises/ms-outbox](exercises/ms-outbox/) | 25 min |
+| 11 | Day 2 | `ms-sagas` | Sagas replace distributed transactions | [exercises/ms-sagas](exercises/ms-sagas/) | 25 min |
+| 12 | Day 2 | `ms-resilience` | Timeouts, retries, and idempotency belong together | [exercises/ms-resilience](exercises/ms-resilience/) | 25 min |
+| 13 | Day 2 | `ms-observability` | One request, one trace ID across all services | [exercises/ms-observability](exercises/ms-observability/) | 20 min |
+| 14 | Day 2 | `ms-contract-testing` | Contract tests instead of an end-to-end zoo | [exercises/ms-contract-testing](exercises/ms-contract-testing/) | 25 min |
 
-### Zusatzkapitel
+### Extra chapters
 
-Die Zusatzkapitel kannst du nach dem Workshop machen.
+You can do the extra chapters after the workshop.
 
-| # | ID | Thema | Ordner | Dauer |
+| # | ID | Topic | Folder | Duration |
 |---|---|---|---|---|
-| 15 | `ms-kubernetes` | Was ändert sich von Compose zu Kubernetes? | [exercises/ms-kubernetes](exercises/ms-kubernetes/) | 20 Min |
-| 16 | `ms-micro-frontends` | Micro-Frontends schneiden das UI wie die Services | [exercises/ms-micro-frontends](exercises/ms-micro-frontends/) | 20 Min |
-| 17 | `ms-service-auth` | Services prüfen, wer sie aufruft | [exercises/ms-service-auth](exercises/ms-service-auth/) | 25 Min |
-| 18 | `ms-context-cut` | Ein Service je Bounded Context, nicht je Entity | [exercises/ms-context-cut](exercises/ms-context-cut/) | 25 Min |
-| 19 | `ms-rest-ddd` | Eine REST-API spricht die Sprache ihres Bounded Context | [exercises/ms-rest-ddd](exercises/ms-rest-ddd/) | 25 Min |
+| 15 | `ms-kubernetes` | What changes from Compose to Kubernetes? | [exercises/ms-kubernetes](exercises/ms-kubernetes/) | 20 min |
+| 16 | `ms-micro-frontends` | Micro-frontends slice the UI like services | [exercises/ms-micro-frontends](exercises/ms-micro-frontends/) | 20 min |
+| 17 | `ms-service-auth` | Services check who calls them | [exercises/ms-service-auth](exercises/ms-service-auth/) | 25 min |
+| 18 | `ms-context-cut` | One service per Bounded Context, not per entity | [exercises/ms-context-cut](exercises/ms-context-cut/) | 25 min |
+| 19 | `ms-rest-ddd` | A REST API speaks its Bounded Context language | [exercises/ms-rest-ddd](exercises/ms-rest-ddd/) | 25 min |
 
-Event Sourcing steht im Workshop als Zusatzkapitel aus dem Architektur-Bestand. Die Übung dazu liegt in
+Event Sourcing is an extra chapter of the workshop, taken from the existing architecture material. Its exercise lives in
 [introduction-nodejs](https://github.com/MikeBild/introduction-nodejs/tree/HEAD/EXAMPLES/ARCHITECTURE/event-sourcing).
 
-## Der Werkstatt-Shop
+## The workshop shop
 
-Dieselbe kleine Domäne zieht sich durch alle Workshops. Hier ist sie auf drei Services verteilt:
+The same small domain runs through all workshops. Here it is split across three services:
 
-| Service | Aufgabe | Port | Daten |
+| Service | Task | Port | Data |
 |---|---|---|---|
-| `catalog` | Produkte und Preise | 3001 | eigene SQLite-Datei |
-| `orders` | Bestellungen und die Saga der Bestellung | 3002 | eigene SQLite-Datei mit Outbox und Inbox |
-| `inventory` | Bestand und Reservierungen | 3003 | eigene SQLite-Datei mit Outbox und Inbox |
+| `catalog` | Products and prices | 3001 | Own SQLite file |
+| `orders` | Orders and the saga of the order | 3002 | Own SQLite file with outbox and inbox |
+| `inventory` | Stock and reservations | 3003 | Own SQLite file with outbox and inbox |
 
-- `orders` fragt beim Bestellen `catalog` synchron per HTTP nach den Preisen, mit Timeout.
-- Danach laufen Events: `OrderPlaced` → `inventory` reserviert → `StockReserved` oder `StockRejected` → bei Ablehnung storniert `orders` und meldet `OrderCancelled`.
-- Events gehen über eine Outbox per HTTP an `POST /inbox` des Empfängers. Die Inbox verarbeitet jedes Event genau einmal.
-- Geld steht immer in ganzen Cent (`priceCents`).
+- When an order is placed, `orders` asks `catalog` for the prices synchronously via HTTP, with a timeout.
+- After that, events take over: `OrderPlaced` → `inventory` reserves → `StockReserved` or `StockRejected` → on rejection `orders` cancels and reports `OrderCancelled`.
+- Events travel through an outbox via HTTP to the `POST /inbox` of the receiver. The inbox processes each event exactly once.
+- Money is always in whole cents (`priceCents`).
 
-Die Verträge (zod-Schemas für APIs und Events) liegen in [`packages/contracts`](packages/contracts/src/index.ts),
-kleine Helfer für Tests und Services in [`packages/kit`](packages/kit/src/index.ts).
+The contracts (zod schemas for APIs and events) live in [`packages/contracts`](packages/contracts/src/index.ts),
+small helpers for tests and services in [`packages/kit`](packages/kit/src/index.ts).
 
-Das System starten und eine Bestellung aufgeben:
+Start the system and place an order:
 
 ```bash
 npm run up       # docker compose up --build --wait
 curl -X POST localhost:3002/orders -H 'content-type: application/json' \
   -d '{"customerId":"c-1","items":[{"productId":"p-2","quantity":1}]}'
 curl localhost:3003/stock/p-2
-npm run down     # stoppt alles und löscht die Volumes
+npm run down     # stops everything and deletes the volumes
 ```
 
-Ohne Docker startest du einen Service direkt, zum Beispiel `npm run dev -w services/catalog`.
-Node.js 26 führt TypeScript ohne Build-Schritt aus.
+Without Docker you start a single service directly, for example `npm run dev -w services/catalog`.
+Node.js 26 runs TypeScript without a build step.
 
-## Pakete
+## Packages
 
-Jedes Paket muss seinen Platz verdienen. Mehr brauchst du nicht:
+Every package has to earn its place. You do not need more:
 
-| Paket | Wofür |
+| Package | What for |
 |---|---|
-| `express` 5 | HTTP-Services mit Routen, Middleware und Fehlerbehandlung |
-| `zod` 4 | Verträge prüfen und daraus JSON Schema für OpenAPI 3.1 erzeugen (`z.toJSONSchema`) |
-| `vitest` | Tests gegen Startpunkt, Lösung und das Gesamtsystem |
-| `typescript`, `@types/node`, `@types/express` | Typprüfung |
+| `express` 5 | HTTP services with routes, middleware and error handling |
+| `zod` 4 | Validate contracts and generate JSON Schema for OpenAPI 3.1 from them (`z.toJSONSchema`) |
+| `vitest` | Tests against the starting point, the reference solution and the whole system |
+| `typescript`, `@types/node`, `@types/express` | Type checking |
 
-Bewusst ohne Zusatzpaket: SQLite (`node:sqlite`), HTTP-Client (`fetch`), Tokens (`node:crypto` mit Ed25519),
-Trace Context (`AsyncLocalStorage`) und Messaging (Outbox per HTTP statt Broker). In Produktion ergänzt du dort,
-wo es trägt, zum Beispiel OpenTelemetry, einen Message Broker oder Pact.
+Deliberately without an extra package: SQLite (`node:sqlite`), HTTP client (`fetch`), tokens (`node:crypto` with Ed25519),
+Trace Context (`AsyncLocalStorage`) and messaging (outbox via HTTP instead of a broker). In production you add,
+where it pays off, for example OpenTelemetry, a message broker or Pact.
 
-## Workshop und Folien
+## Workshop and slides
 
-- Workshop: [„Microservices mit Node.js, Express 5 und Docker Compose“](https://workshops.mikebild.dev/w/microservices/remote/)
-- Folien: [slides.mikebild.dev/introduction-microservices](https://slides.mikebild.dev/introduction-microservices.html)
+- Workshop: [“Microservices with Node.js, Express 5, and Docker Compose”](https://workshops.mikebild.dev/w/microservices/remote/)
+- Slides: [slides.mikebild.dev/introduction-microservices](https://slides.mikebild.dev/introduction-microservices.html)
 - PDF: [slides.mikebild.dev/introduction-microservices.pdf](https://slides.mikebild.dev/introduction-microservices.pdf)
 
-## Lizenz
+## License
 
 [MIT](LICENSE)

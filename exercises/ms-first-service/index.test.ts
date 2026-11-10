@@ -11,13 +11,13 @@ const seeded = () => {
 }
 
 describe('catalog service', () => {
-  it('meldet sich gesund', async () => {
+  it('reports itself healthy', async () => {
     await using api = await listen(createCatalogApp({ db: seeded() }))
     const response = await fetch(`${api.url}/health`)
     expect(await response.json()).toEqual({ status: 'ok', service: 'catalog' })
   })
 
-  it('listet Produkte nach id sortiert mit priceCents', async () => {
+  it('lists products sorted by id with priceCents', async () => {
     await using api = await listen(createCatalogApp({ db: seeded() }))
     const response = await fetch(`${api.url}/products`)
     expect(response.status).toBe(200)
@@ -27,7 +27,7 @@ describe('catalog service', () => {
     ])
   })
 
-  it('liefert ein Produkt oder 404', async () => {
+  it('returns one product or 404', async () => {
     await using api = await listen(createCatalogApp({ db: seeded() }))
     expect(await (await fetch(`${api.url}/products/p-2`)).json()).toEqual({
       id: 'p-2',
@@ -41,11 +41,11 @@ describe('catalog service', () => {
 })
 
 describe('portFromEnv', () => {
-  it('liest PORT und nimmt sonst 3001', () => {
+  it('reads PORT and falls back to 3001', () => {
     expect(portFromEnv({ PORT: '4000' })).toBe(4000)
     expect(portFromEnv({})).toBe(3001)
   })
-  it('lehnt ungültige Ports ab', () => {
+  it('rejects invalid ports', () => {
     expect(() => portFromEnv({ PORT: 'abc' })).toThrow()
     expect(() => portFromEnv({ PORT: '70000' })).toThrow()
   })

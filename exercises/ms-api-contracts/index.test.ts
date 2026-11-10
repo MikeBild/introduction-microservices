@@ -15,7 +15,7 @@ const post = (url: string, body: unknown) =>
   fetch(`${url}/orders`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
 
 describe('orders API contract', () => {
-  it('veröffentlicht OpenAPI 3.1 aus den zod-Schemas', async () => {
+  it('publishes OpenAPI 3.1 from the zod schemas', async () => {
     await using api = await listen(createOrdersApi({ place }))
     const doc: any = await (await fetch(`${api.url}/openapi.json`)).json()
     expect(doc.openapi).toBe('3.1.0')
@@ -27,14 +27,14 @@ describe('orders API contract', () => {
     expect(post.responses['400'].content).toHaveProperty('application/problem+json')
   })
 
-  it('nimmt eine gültige Bestellung an', async () => {
+  it('accepts a valid order', async () => {
     await using api = await listen(createOrdersApi({ place }))
     const response = await post(api.url, { customerId: 'c-1', items: [{ productId: 'p-1', quantity: 2 }] })
     expect(response.status).toBe(201)
     expect(((await response.json()) as Order).status).toBe('placed')
   })
 
-  it('lehnt ungültige Bodys mit Problem Details ab', async () => {
+  it('rejects invalid bodies with Problem Details', async () => {
     await using api = await listen(createOrdersApi({ place }))
     for (const body of [{ customerId: 'c-1', items: [] }, { customerId: 'c-1', items: [{ productId: 'p-1', quantity: 1 }], priceCents: 1 }]) {
       const response = await post(api.url, body)

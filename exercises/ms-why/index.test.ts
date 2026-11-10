@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { changeCoupling, keepTogether, type Commit } from '#ex/ms-why'
 
-// Ein Ausschnitt aus der Historie des Werkstatt-Shop-Monolithen
+// An excerpt from the history of the workshop shop monolith
 const history: Commit[] = [
   { id: 'c1', modules: ['orders', 'pricing'] },
   { id: 'c2', modules: ['orders', 'pricing', 'orders'] },
@@ -14,7 +14,7 @@ const history: Commit[] = [
 ]
 
 describe('changeCoupling', () => {
-  it('zählt gemeinsame Änderungen je Paar und sortiert nach ratio', () => {
+  it('counts shared changes per pair and sorts by ratio', () => {
     const couplings = changeCoupling(history)
     expect(couplings[0]).toEqual({ a: 'orders', b: 'pricing', together: 3, ratio: 1 })
     expect(couplings).toContainEqual({ a: 'inventory', b: 'orders', together: 1, ratio: 1 / 3 })
@@ -22,13 +22,13 @@ describe('changeCoupling', () => {
     expect(couplings).toHaveLength(3)
   })
 
-  it('liefert für eine leere Historie nichts', () => {
+  it('returns nothing for an empty history', () => {
     expect(changeCoupling([])).toEqual([])
   })
 })
 
 describe('keepTogether', () => {
-  it('nennt Paare, die zusammen in einen Service gehören', () => {
+  it('names pairs that belong together in one service', () => {
     expect(keepTogether(history)).toEqual([['orders', 'pricing']])
     expect(keepTogether(history, 0.3)).toHaveLength(3)
   })

@@ -1,4 +1,4 @@
-// Modul orders: nutzt catalog nur über dessen index.ts
+// Module orders: uses catalog only via its index.ts
 import { priceOf } from '../catalog/index.ts'
 import { total } from './internal/total.ts'
 

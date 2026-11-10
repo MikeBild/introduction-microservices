@@ -1,4 +1,4 @@
-// Lösung ms-async-events
+// Reference solution ms-async-events
 import express from 'express'
 import { openDb, transaction } from '@werkstatt/kit'
 import { ShopEvent, type EventOf } from '@werkstatt/contracts'
@@ -32,7 +32,7 @@ export const createInventory = (path = ':memory:') => {
       return
     }
     const event = parsed.data
-    // Inbox: Event-ID merken und Wirkung in derselben Transaktion – so wirkt jedes Event genau einmal.
+    // Inbox: remember the event ID and apply the effect in the same transaction – so every event takes effect exactly once.
     const duplicate = transaction(db, () => {
       if (remember.run(event.id, new Date().toISOString()).changes === 0) return true
       if (event.type === 'OrderPlaced') onOrderPlaced(event)

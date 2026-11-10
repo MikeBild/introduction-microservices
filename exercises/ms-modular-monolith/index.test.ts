@@ -14,7 +14,7 @@ const fixture = (files: Record<string, string>) => {
 }
 
 describe('checkBoundaries', () => {
-  it('erlaubt Imports über index.ts und innerhalb eines Moduls', () => {
+  it('allows imports via index.ts and within a module', () => {
     const root = fixture({
       'modules/catalog/index.ts': "export { priceOf } from './internal/prices.ts'",
       'modules/catalog/internal/prices.ts': 'export const priceOf = () => 1',
@@ -24,7 +24,7 @@ describe('checkBoundaries', () => {
     expect(checkBoundaries(root)).toEqual([])
   })
 
-  it('meldet Griffe in die Interna eines anderen Moduls', () => {
+  it('reports reaching into the internals of another module', () => {
     const root = fixture({
       'modules/catalog/index.ts': 'export {}',
       'modules/catalog/internal/prices.ts': 'export const priceOf = () => 1',
@@ -35,7 +35,7 @@ describe('checkBoundaries', () => {
     ])
   })
 
-  it('der Werkstatt-Modulith hält seine Grenzen ein', () => {
+  it('the workshop modulith keeps its boundaries', () => {
     expect(checkBoundaries(modulithDir)).toEqual([])
   })
 })

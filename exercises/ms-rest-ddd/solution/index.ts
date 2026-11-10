@@ -1,4 +1,4 @@
-// Lösung ms-rest-ddd
+// Reference solution ms-rest-ddd
 import express, { type Response } from 'express'
 import { z } from 'zod'
 
@@ -22,7 +22,7 @@ export const createShipmentRepository = (seed: readonly Shipment[] = []) => {
 }
 export type ShipmentRepository = ReturnType<typeof createShipmentRepository>
 
-// Das Aggregate als Pure Functions: Sendung rein, neue Sendung oder Ablehnung raus. Kein HTTP, keine Datenbank.
+// The Aggregate as Pure Functions: shipment in, new shipment or rejection out. No HTTP, no database.
 export const dispatch = (shipment: Shipment, input: DispatchInput): Shipment | Rejection =>
   shipment.status === 'preparing'
     ? { ...shipment, status: 'dispatched', trackingNumber: input.trackingNumber }
@@ -40,7 +40,7 @@ export const titles: Record<string, string> = {
   'shipment-not-deliverable': 'Sendung kann nicht zugestellt werden',
 }
 
-/** Problem Details nach RFC 9457: type ist der stabile Bezeichner je Regel, instance der betroffene Request. */
+/** Problem Details per RFC 9457: type is the stable identifier per rule, instance is the affected request. */
 export const problem = (res: Response, status: number, code: string, detail: string) => {
   res
     .status(status)
@@ -55,21 +55,21 @@ export const createShippingApi = ({ repository }: { repository: ShipmentReposito
   app.disable('x-powered-by')
   app.use(express.json({ limit: '100kb' }))
 
-  // Query: das Read-Modell mit Filter
+  // Query: the read model with a filter
   app.get('/shipments', (req, res) => {
     const filter = ListFilter.safeParse(req.query)
     if (!filter.success) return problem(res, 400, 'invalid-input', z.prettifyError(filter.error))
     res.json(repository.list(filter.data))
   })
 
-  // Aggregate Root als Ressource
+  // Aggregate Root as a resource
   app.get('/shipments/:id', (req, res) => {
     const shipment = repository.get(req.params.id)
     if (!shipment) return problem(res, 404, 'shipment-not-found', `Sendung ${req.params.id} unbekannt`)
     res.json(shipment)
   })
 
-  // Command: die Route übersetzt, die Pure Function entscheidet, die Antwort ist die Ressource danach.
+  // Command: the route translates, the Pure Function decides, the response is the resource afterwards.
   const command = (decide: (shipment: Shipment, body: unknown) => Shipment | Rejection | { invalid: string }) =>
     (req: express.Request, res: Response) => {
       const shipment = repository.get(req.params.id as string)

@@ -11,20 +11,20 @@ const order = (id: string): Order => ({
 })
 
 describe('outbox', () => {
-  it('schreibt Bestellung und Event gemeinsam', () => {
+  it('writes order and event together', () => {
     const store = createOrderStore()
     store.placeOrder(order('o-1'))
     expect(store.counts()).toEqual({ orders: 1, events: 1 })
   })
 
-  it('schreibt nichts, wenn ein Teil scheitert', () => {
+  it('writes nothing if one part fails', () => {
     const store = createOrderStore()
     store.db.exec("CREATE TRIGGER disk_full BEFORE INSERT ON outbox BEGIN SELECT RAISE(ABORT, 'disk full'); END")
     expect(() => store.placeOrder(order('o-1'))).toThrow('disk full')
     expect(store.counts()).toEqual({ orders: 0, events: 0 })
   })
 
-  it('veröffentlicht OrderPlaced in Reihenfolge und nur einmal', async () => {
+  it('publishes OrderPlaced in order and only once', async () => {
     const store = createOrderStore()
     store.placeOrder(order('o-1'))
     store.placeOrder(order('o-2'))
@@ -36,7 +36,7 @@ describe('outbox', () => {
     expect(published).toHaveLength(2)
   })
 
-  it('lässt nach einem Fehler den Rest für den nächsten Lauf liegen', async () => {
+  it('leaves the rest for the next run after an error', async () => {
     const store = createOrderStore()
     for (const id of ['o-1', 'o-2', 'o-3']) store.placeOrder(order(id))
     const seen: string[] = []

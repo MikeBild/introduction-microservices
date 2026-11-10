@@ -1,4 +1,4 @@
-// Lösung ms-sagas
+// Reference solution ms-sagas
 export type SagaState = {
   orderId: string
   status: 'placed' | 'paid' | 'cancelled'
@@ -18,7 +18,7 @@ export type Effect =
 
 export const start = (orderId: string): SagaState => ({ orderId, status: 'placed', stock: 'pending' })
 
-/** Pure Function: alter Zustand + Nachricht → neuer Zustand + Effekte. Kein I/O, gut testbar. */
+/** Pure Function: old state + message → new state + effects. No I/O, easy to test. */
 export const react = (state: SagaState, message: SagaMessage): { state: SagaState; effects: Effect[] } => {
   const { orderId } = state
   switch (message.type) {

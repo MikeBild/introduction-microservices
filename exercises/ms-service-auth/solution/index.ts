@@ -1,4 +1,4 @@
-// Lösung ms-service-auth
+// Reference solution ms-service-auth
 import { sign, verify, type KeyObject } from 'node:crypto'
 import type { RequestHandler } from 'express'
 
@@ -15,7 +15,7 @@ export type TokenOptions = {
   now?: () => number
 }
 
-/** Kurzlebiges JWT (EdDSA, Ed25519) – signiert mit dem privaten Schlüssel des aufrufenden Services. */
+/** Short-lived JWT (EdDSA, Ed25519) – signed with the private key of the calling service. */
 export const signServiceToken = ({ privateKey, kid, issuer, subject, audience, ttlSeconds = 60, now = Date.now }: TokenOptions) => {
   const iat = Math.floor(now() / 1000)
   const input = `${b64({ alg: 'EdDSA', typ: 'JWT', kid })}.${b64({ iss: issuer, sub: subject, aud: audience, iat, exp: iat + ttlSeconds })}`
@@ -30,7 +30,7 @@ export type VerifyOptions = {
   now?: () => number
 }
 
-/** 401: kein oder ungültiges Token. 403: gültig, aber nicht für uns oder Aufrufer nicht erlaubt. */
+/** 401: no token or an invalid one. 403: valid, but not for us or the caller is not allowed. */
 export const requireServiceToken = ({ publicKeys, issuer, audience, allowedCallers, now = Date.now }: VerifyOptions): RequestHandler =>
   (req, res, next) => {
     const deny = (status: 401 | 403, error: string) => void res.status(status).json({ error })

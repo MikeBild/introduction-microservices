@@ -1,4 +1,4 @@
-// Lösung ms-context-cut
+// Reference solution ms-context-cut
 import { fileURLToPath } from 'node:url'
 
 export const decisionsDir = fileURLToPath(new URL('./decisions', import.meta.url))
@@ -21,7 +21,7 @@ export type Edge = { from: string; to: string; via: 'http' | 'events' | 'databas
 export type ContextMap = { contexts: Record<string, { owns: readonly Entity[] }>; edges: readonly Edge[] }
 export type Issue = { rule: 'owner' | 'database' | 'unknown-context'; detail: string }
 
-/** Der Vorschlag: ein Service je Entity. Reservation braucht jeder, und der OrderService liest die Tabelle products direkt. */
+/** The proposal: one service per entity. Everyone needs Reservation, and the OrderService reads the table products directly. */
 export const proposal: ContextMap = {
   contexts: {
     ProductService: { owns: ['Product', 'Price', 'StockItem', 'Reservation'] },
@@ -34,7 +34,7 @@ export const proposal: ContextMap = {
   ],
 }
 
-/** Drei Regeln, die eine Context Map einhalten muss, bevor daraus Services werden. */
+/** Three rules a Context Map must follow before it turns into services. */
 export const checkContextMap = (map: ContextMap, known: readonly string[] = entities): Issue[] => {
   const names = Object.keys(map.contexts)
   const ownersOf = (entity: string) =>
@@ -54,8 +54,8 @@ export const checkContextMap = (map: ContextMap, known: readonly string[] = enti
   return [...owner, ...database, ...unknown]
 }
 
-// Der Schnitt nach Bounded Contexts: Jeder Context nimmt die Entities mit, deren Sprache er spricht.
-// „Product“ gibt es dreimal – als Katalogeintrag mit Preis, als Bestand im Lager, als Position in der Bestellung.
+// The cut along Bounded Contexts: each context takes the entities whose language it speaks.
+// “Product” exists three times – as a catalog entry with a price, as stock in inventory, as a line item in the order.
 export const contextMap: ContextMap = {
   contexts: {
     catalog: { owns: ['Product', 'Price'] },

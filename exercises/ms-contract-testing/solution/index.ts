@@ -1,4 +1,4 @@
-// Lösung ms-contract-testing
+// Reference solution ms-contract-testing
 import express, { type Express } from 'express'
 import { z } from 'zod'
 import { listen } from '@werkstatt/kit'
@@ -10,7 +10,7 @@ export type Interaction = {
 }
 export type Contract = { consumer: string; provider: string; interactions: Interaction[] }
 
-// Der Consumer beschreibt nur, was er wirklich nutzt: id und priceCents, nicht name.
+// The consumer describes only what it really uses: id and priceCents, not name.
 const PriceView = z.object({ id: z.string(), priceCents: z.number().int().min(0) })
 
 export const catalogContract: Contract = {
@@ -30,7 +30,7 @@ export const catalogContract: Contract = {
   ],
 }
 
-/** Consumer-Seite: ein Stub, der genau den Vertrag spielt. Beispiele müssen zum Schema passen. */
+/** Consumer side: a stub that plays exactly the contract. Examples must match the schema. */
 export const stubFromContract = (contract: Contract): Express => {
   const app = express()
   for (const { request, response } of contract.interactions) {
@@ -44,7 +44,7 @@ export const stubFromContract = (contract: Contract): Express => {
 
 export type Verification = { description: string; ok: boolean; problem?: string }
 
-/** Provider-Seite: jede Interaktion gegen die echte App des Providers abspielen. */
+/** Provider side: replay every interaction against the real app of the provider. */
 export const verifyProvider = async (app: Express, contract: Contract): Promise<Verification[]> => {
   await using provider = await listen(app)
   const results: Verification[] = []

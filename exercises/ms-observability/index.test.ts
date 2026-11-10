@@ -11,10 +11,10 @@ afterEach(() => {
 })
 
 describe('parseTraceparent', () => {
-  it('liest einen gültigen Header', () => {
+  it('reads a valid header', () => {
     expect(parseTraceparent(header)).toEqual({ traceId, spanId: '00f067aa0ba902b7' })
   })
-  it('verwirft ungültige Header', () => {
+  it('discards invalid headers', () => {
     expect(parseTraceparent(undefined)).toBeUndefined()
     expect(parseTraceparent('kaputt')).toBeUndefined()
     expect(parseTraceparent(`00-${'0'.repeat(32)}-00f067aa0ba902b7-01`)).toBeUndefined()
@@ -23,7 +23,7 @@ describe('parseTraceparent', () => {
 })
 
 describe('trace propagation', () => {
-  // inventory merkt sich den traceparent, den es von orders bekommt
+  // inventory remembers the traceparent it gets from orders
   const downstream = () => {
     const seen: Array<string | undefined> = []
     const app = express().get('/stock', (req, res) => {
@@ -41,7 +41,7 @@ describe('trace propagation', () => {
         res.json({ id: 'o-1' })
       })
 
-  it('reicht die Trace-ID des Aufrufers an den nächsten Service weiter', async () => {
+  it('passes the trace ID of the caller on to the next service', async () => {
     const inventory = downstream()
     await using inv = await listen(inventory.app)
     await using orders = await listen(upstream(inv.url))
@@ -52,7 +52,7 @@ describe('trace propagation', () => {
     expect(forwarded?.spanId).not.toBe('00f067aa0ba902b7')
   })
 
-  it('beginnt ohne Header einen neuen Trace und loggt die Trace-ID', async () => {
+  it('starts a new trace without a header and logs the trace ID', async () => {
     const lines: string[] = []
     vi.spyOn(console, 'log').mockImplementation((line: string) => void lines.push(line))
     const inventory = downstream()

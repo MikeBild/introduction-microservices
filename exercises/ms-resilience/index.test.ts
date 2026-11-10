@@ -4,7 +4,7 @@ import { listen } from '@werkstatt/kit'
 import { HttpError, idempotency, isRetryable, withRetry } from '#ex/ms-resilience'
 
 describe('isRetryable', () => {
-  it('wiederholt nur vorübergehende Fehler', () => {
+  it('retries only transient errors', () => {
     expect(isRetryable(new HttpError(503))).toBe(true)
     expect(isRetryable(new HttpError(429))).toBe(true)
     expect(isRetryable(new TypeError('fetch failed'))).toBe(true)
@@ -16,7 +16,7 @@ describe('isRetryable', () => {
 })
 
 describe('withRetry', () => {
-  it('wartet mit exponentiellem Backoff und hat Erfolg', async () => {
+  it('waits with exponential backoff and succeeds', async () => {
     const waits: number[] = []
     const result = await withRetry(
       async (attempt) => {
@@ -29,7 +29,7 @@ describe('withRetry', () => {
     expect(waits).toEqual([100, 200, 400])
   })
 
-  it('begrenzt die Wartezeit und gibt nach retries auf', async () => {
+  it('caps the wait time and gives up after retries', async () => {
     const waits: number[] = []
     let calls = 0
     await expect(
@@ -45,7 +45,7 @@ describe('withRetry', () => {
     expect(waits).toEqual([1500, 2000])
   })
 
-  it('wiederholt keine fachlichen Fehler', async () => {
+  it('does not retry domain errors', async () => {
     let calls = 0
     await expect(
       withRetry(async () => {
@@ -75,7 +75,7 @@ describe('idempotency', () => {
       body: JSON.stringify(body),
     })
 
-  it('liefert bei Wiederholung dieselbe Antwort und legt nichts doppelt an', async () => {
+  it('returns the same response on a repeat and creates nothing twice', async () => {
     const orders = ordersApp()
     await using api = await listen(orders.app)
     const body = { customerId: 'c-1', items: [{ productId: 'p-1', quantity: 1 }] }
@@ -88,7 +88,7 @@ describe('idempotency', () => {
     expect(orders.created()).toBe(1)
   })
 
-  it('lehnt denselben Schlüssel mit anderem Body ab', async () => {
+  it('rejects the same key with a different body', async () => {
     const orders = ordersApp()
     await using api = await listen(orders.app)
     await post(api.url, 'k-1', { customerId: 'c-1' })

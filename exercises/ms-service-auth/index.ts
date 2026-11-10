@@ -1,18 +1,18 @@
-// Lektion ms-service-auth: Services prüfen, wer sie aufruft
-// Dauer: etwa 25 Minuten
+// Lesson ms-service-auth: Services check who calls them
+// Duration: about 25 minutes
 //
-// orders ruft inventory auf. inventory soll nur Aufrufe annehmen, die nachweislich von orders kommen
-// und für inventory bestimmt sind. orders signiert ein kurzlebiges JWT mit seinem privaten Ed25519-Schlüssel,
-// inventory prüft es mit dem öffentlichen Schlüssel. Ohne Zusatzpaket: node:crypto kann EdDSA.
+// orders calls inventory. inventory should only accept calls that provably come from orders
+// and are meant for inventory. orders signs a short-lived JWT with its private Ed25519 key,
+// inventory verifies it with the public key. No extra package: node:crypto supports EdDSA.
 //
-// Aufgabe: requireServiceToken(options) als Middleware.
-// 1. Header Authorization: Bearer <header>.<payload>.<signature>. Fehlt er → 401.
-// 2. kid aus dem Header wählt den öffentlichen Schlüssel, alg muss EdDSA sein. Unbekannt → 401.
-// 3. Signatur mit verify(null, Buffer.from(`${header}.${payload}`), key, signatur) prüfen. Falsch → 401.
-// 4. iss muss passen und exp in der Zukunft liegen (now() in ms) → sonst 401.
-// 5. aud muss audience sein, sub in allowedCallers → sonst 403. Danach res.locals.caller = sub und next().
+// Task: requireServiceToken(options) as middleware.
+// 1. Header Authorization: Bearer <header>.<payload>.<signature>. If it is missing → 401.
+// 2. kid from the header selects the public key, alg must be EdDSA. Unknown → 401.
+// 3. Check the signature with verify(null, Buffer.from(`${header}.${payload}`), key, signature). Wrong → 401.
+// 4. iss must match and exp must be in the future (now() in ms) → otherwise 401.
+// 5. aud must be audience, sub must be in allowedCallers → otherwise 403. Then res.locals.caller = sub and next().
 //
-// Prüfen: npm test -- ms-service-auth
+// Check: npm test -- ms-service-auth
 import { sign, verify, type KeyObject } from 'node:crypto'
 import type { RequestHandler } from 'express'
 
@@ -44,7 +44,7 @@ export type VerifyOptions = {
 }
 
 export const requireServiceToken = (options: VerifyOptions): RequestHandler => (req, res, next) => {
-  // Fallstrick: das Token nur decodieren und dem Inhalt glauben
+  // Pitfall: only decoding the token and trusting its content
   const token = (req.get('authorization') ?? '').replace('Bearer ', '')
   const payload = token.split('.')[1]
   if (!payload) {

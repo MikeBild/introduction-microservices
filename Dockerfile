@@ -1,5 +1,5 @@
-# Ein Image je Service aus demselben Repo: docker build --build-arg SERVICE=orders .
-# Node 26 führt TypeScript direkt aus (Type Stripping), ein Build-Schritt entfällt.
+# One image per service from the same repo: docker build --build-arg SERVICE=orders .
+# Node 26 runs TypeScript directly (type stripping), so there is no build step.
 FROM node:26-alpine
 ARG SERVICE
 ENV NODE_ENV=production SERVICE=${SERVICE} DB_PATH=/data/${SERVICE}.db

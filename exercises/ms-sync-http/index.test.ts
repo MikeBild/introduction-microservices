@@ -23,14 +23,14 @@ const fakeCatalog = () =>
     })
 
 describe('catalog client', () => {
-  it('liefert ein Produkt oder undefined bei 404', async () => {
+  it('returns a product or undefined on 404', async () => {
     await using catalog = await listen(fakeCatalog())
     const client = createCatalogClient(catalog.url)
     expect(await client.product('p-1')).toEqual({ id: 'p-1', name: 'Werkzeug', priceCents: 1299 })
     expect(await client.product('p-9')).toBeUndefined()
   })
 
-  it('bricht nach dem Timeout ab', async () => {
+  it('aborts after the timeout', async () => {
     await using catalog = await listen(fakeCatalog())
     const client = createCatalogClient(catalog.url, { timeoutMs: 100 })
     const started = Date.now()
@@ -38,20 +38,20 @@ describe('catalog client', () => {
     expect(Date.now() - started).toBeLessThan(800)
   })
 
-  it('meldet 5xx und nicht erreichbare Services als CatalogUnavailable', async () => {
+  it('reports 5xx and unreachable services as CatalogUnavailable', async () => {
     await using catalog = await listen(fakeCatalog())
     await expect(createCatalogClient(catalog.url).product('broken')).rejects.toBeInstanceOf(CatalogUnavailable)
     await expect(createCatalogClient('http://127.0.0.1:9').product('p-1')).rejects.toBeInstanceOf(CatalogUnavailable)
   })
 
-  it('prüft die Antwort gegen den Vertrag', async () => {
+  it('validates the response against the contract', async () => {
     await using catalog = await listen(fakeCatalog())
     await expect(createCatalogClient(catalog.url).product('invalid')).rejects.toThrow()
   })
 })
 
 describe('priceOrder', () => {
-  it('nimmt Preise aus dem Katalog', async () => {
+  it('takes prices from the catalog', async () => {
     await using catalog = await listen(fakeCatalog())
     const items = await priceOrder(
       { customerId: 'c-1', items: [{ productId: 'p-1', quantity: 2 }, { productId: 'p-2', quantity: 1 }] },
@@ -63,7 +63,7 @@ describe('priceOrder', () => {
     ])
   })
 
-  it('lehnt unbekannte Produkte ab', async () => {
+  it('rejects unknown products', async () => {
     await using catalog = await listen(fakeCatalog())
     await expect(
       priceOrder({ customerId: 'c-1', items: [{ productId: 'p-9', quantity: 1 }] }, createCatalogClient(catalog.url)),

@@ -1,13 +1,13 @@
-// Lektion ms-first-service: Ein Service, ein Prozess, eine Aufgabe
-// Dauer: etwa 20 Minuten
+// Lesson ms-first-service: One service, one process, one task
+// Duration: about 20 minutes
 //
-// Aufgabe: Baue den Service catalog mit Express 5 und node:sqlite.
-// 1. GET /health liefert { status: 'ok', service: 'catalog' } (gibt es schon).
-// 2. GET /products liefert alle Produkte als Product[] (priceCents statt price_cents), sortiert nach id.
-// 3. GET /products/:productId liefert ein Produkt oder 404 mit { error: 'product not found' }.
-// 4. portFromEnv liest PORT aus der Umgebung (Default 3001) und wirft bei ungültigen Werten.
+// Task: Build the service catalog with Express 5 and node:sqlite.
+// 1. GET /health returns { status: 'ok', service: 'catalog' } (already there).
+// 2. GET /products returns all products as Product[] (priceCents instead of price_cents), sorted by id.
+// 3. GET /products/:productId returns one product or 404 with { error: 'product not found' }.
+// 4. portFromEnv reads PORT from the environment (default 3001) and throws on invalid values.
 //
-// Prüfen: npm test -- ms-first-service
+// Check: npm test -- ms-first-service
 import express from 'express'
 import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'
@@ -23,7 +23,7 @@ export const createCatalogApp = ({ db }: { db: Database }) => {
     res.json({ status: 'ok', service: 'catalog' })
   })
 
-  // TODO: GET /products und GET /products/:productId mit db.prepare(...)
+  // TODO: GET /products and GET /products/:productId with db.prepare(...)
   void db
 
   return app

@@ -1,3 +1,3 @@
-// Öffentliche Schnittstelle des Moduls catalog
-// TODO: priceOf hier exportieren, damit andere Module nicht in internal/ greifen
+// Public interface of the module catalog
+// TODO: export priceOf here so that other modules do not reach into internal/
 export {}

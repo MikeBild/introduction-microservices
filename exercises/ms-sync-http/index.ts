@@ -1,16 +1,16 @@
-// Lektion ms-sync-http: Ein synchroner Aufruf koppelt die Verfügbarkeit
-// Dauer: etwa 20 Minuten
+// Lesson ms-sync-http: A synchronous call couples availability
+// Duration: about 20 minutes
 //
-// orders fragt beim Bestellen den Service catalog nach den Preisen. Ist catalog langsam oder weg,
-// darf orders nicht ewig warten.
+// When an order is placed, orders asks the service catalog for the prices. If catalog is slow or gone,
+// orders must not wait forever.
 //
-// Aufgabe:
-// 1. createCatalogClient(baseUrl, { timeoutMs }): product(id) ruft GET /products/:id per fetch auf.
-//    Mit AbortSignal.timeout(timeoutMs) abbrechen. 404 → undefined. Netzfehler, Timeout und 5xx → CatalogUnavailable.
-//    Die Antwort mit dem Schema Product aus @werkstatt/contracts prüfen.
-// 2. priceOrder(input, catalog): Preise je Position aus dem Katalog holen (parallel), unbekannte Produkte → UnknownProduct.
+// Task:
+// 1. createCatalogClient(baseUrl, { timeoutMs }): product(id) calls GET /products/:id via fetch.
+//    Abort with AbortSignal.timeout(timeoutMs). 404 → undefined. Network errors, timeout and 5xx → CatalogUnavailable.
+//    Validate the response with the schema Product from @werkstatt/contracts.
+// 2. priceOrder(input, catalog): fetch the price for each line item from the catalog (in parallel), unknown products → UnknownProduct.
 //
-// Prüfen: npm test -- ms-sync-http
+// Check: npm test -- ms-sync-http
 import { Product, type OrderItem, type PlaceOrderInput } from '@werkstatt/contracts'
 
 export class CatalogUnavailable extends Error {
@@ -24,7 +24,7 @@ export type CatalogClient = { product: (productId: string) => Promise<Product | 
 
 export const createCatalogClient = (baseUrl: string, { timeoutMs = 500 } = {}): CatalogClient => ({
   async product(productId) {
-    // Fallstrick: kein Timeout, kein Status-Check, keine Prüfung der Antwort
+    // Pitfall: no timeout, no status check, no validation of the response
     const response = await fetch(`${baseUrl}/products/${productId}`)
     void timeoutMs
     void Product

@@ -19,11 +19,11 @@ describe('checkContextMap', () => {
     edges: [{ from: 'sales', to: 'shipping', via: 'events' }],
   }
 
-  it('lässt eine saubere Context Map durch', () => {
+  it('lets a clean Context Map pass', () => {
     expect(checkContextMap(clean, ['Order', 'Shipment'])).toEqual([])
   })
 
-  it('meldet Entities ohne und mit mehreren Besitzern', () => {
+  it('reports entities with no owner and with several owners', () => {
     const issues = checkContextMap(
       { contexts: { sales: { owns: ['Order', 'Shipment'] }, shipping: { owns: ['Shipment'] } }, edges: [] },
       ['Order', 'Shipment', 'Address'],
@@ -33,7 +33,7 @@ describe('checkContextMap', () => {
     expect(issues).toContainEqual({ rule: 'owner', detail: expect.stringContaining('Address') })
   })
 
-  it('meldet eine gemeinsame Datenbank und unbekannte Contexts', () => {
+  it('reports a shared database and unknown contexts', () => {
     const edges = [
       { from: 'sales', to: 'shipping', via: 'database' },
       { from: 'sales', to: 'billing', via: 'http' },
@@ -41,31 +41,31 @@ describe('checkContextMap', () => {
     expect(rulesOf({ ...clean, edges }, ['Order', 'Shipment'])).toEqual(['database', 'unknown-context'])
   })
 
-  it('der Vorschlag mit Entity-Services fällt durch', () => {
+  it('the proposal with entity services fails', () => {
     expect(rulesOf(proposal)).toEqual(['database', 'owner'])
   })
 })
 
-describe('dein Schnitt', () => {
-  it('besteht den Check für alle Entities des Werkstatt-Shops', () => {
+describe('your cut', () => {
+  it('passes the check for all entities of the workshop shop', () => {
     expect(checkContextMap(contextMap)).toEqual([])
   })
 
-  it('ist kein Service je Entity', () => {
+  it('is not one service per entity', () => {
     expect(Object.keys(contextMap.contexts).length).toBeLessThan(entities.length / 2)
   })
 
-  it('hält zusammen, was sofort gemeinsam gelten muss', () => {
+  it('keeps together what must hold together immediately', () => {
     expect(ownersOf(contextMap, 'OrderItem')).toEqual(ownersOf(contextMap, 'Order'))
     expect(ownersOf(contextMap, 'Reservation')).toEqual(ownersOf(contextMap, 'StockItem'))
   })
 
-  it('trennt, was in verschiedenen Sprachen lebt', () => {
+  it('separates what lives in different languages', () => {
     expect(ownersOf(contextMap, 'StockItem')).not.toEqual(ownersOf(contextMap, 'Price'))
     expect(ownersOf(contextMap, 'Shipment')).not.toEqual(ownersOf(contextMap, 'Price'))
   })
 
-  it('begründet jeden Context in einem ADR', () => {
+  it('justifies each context in an ADR', () => {
     for (const name of Object.keys(contextMap.contexts)) {
       const file = join(decisionsDir, `${name}.md`)
       expect(existsSync(file), `decisions/${name}.md fehlt`).toBe(true)

@@ -11,19 +11,19 @@ const run = (messages: SagaMessage[]) =>
   )
 
 describe('order saga', () => {
-  it('Happy Path: reservieren, bezahlen', () => {
+  it('happy path: reserve, pay', () => {
     const { state, effects } = run([{ type: 'StockReserved' }, { type: 'PaymentCaptured' }])
     expect(state).toEqual({ orderId: 'o-1', status: 'paid', stock: 'reserved' })
     expect(effects).toEqual([{ type: 'CapturePayment', orderId: 'o-1' }])
   })
 
-  it('kein Bestand: Bestellung storniert, keine Zahlung', () => {
+  it('no stock: order cancelled, no payment', () => {
     const { state, effects } = run([{ type: 'StockRejected', productId: 'p-2' }])
     expect(state.status).toBe('cancelled')
     expect(effects).toEqual([{ type: 'OrderCancelled', orderId: 'o-1', reason: 'out of stock: p-2' }])
   })
 
-  it('Zahlung scheitert: Bestand freigeben (Kompensation), dann stornieren', () => {
+  it('payment fails: release stock (compensation), then cancel', () => {
     const { state, effects } = run([{ type: 'StockReserved' }, { type: 'PaymentFailed', reason: 'card declined' }])
     expect(state).toEqual({ orderId: 'o-1', status: 'cancelled', stock: 'released' })
     expect(effects).toEqual([
@@ -33,12 +33,12 @@ describe('order saga', () => {
     ])
   })
 
-  it('ignoriert doppelte Nachrichten', () => {
+  it('ignores duplicate messages', () => {
     const { effects } = run([{ type: 'StockReserved' }, { type: 'StockReserved' }, { type: 'PaymentCaptured' }, { type: 'PaymentCaptured' }])
     expect(effects).toEqual([{ type: 'CapturePayment', orderId: 'o-1' }])
   })
 
-  it('gibt eine verspätete Reservierung nach der Stornierung wieder frei', () => {
+  it('releases a late reservation after the cancellation', () => {
     const { state, effects } = run([
       { type: 'PaymentFailed', reason: 'timeout' },
       { type: 'StockReserved' },

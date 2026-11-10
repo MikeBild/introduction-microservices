@@ -1,4 +1,4 @@
-// Lösung ms-sync-http
+// Reference solution ms-sync-http
 import { Product, type OrderItem, type PlaceOrderInput } from '@werkstatt/contracts'
 
 export class CatalogUnavailable extends Error {
@@ -26,7 +26,7 @@ export const createCatalogClient = (baseUrl: string, { timeoutMs = 500 } = {}): 
   },
 })
 
-/** Preise kommen immer aus dem Katalog, nie aus dem Request des Clients. */
+/** Prices always come from the catalog, never from the request of the client. */
 export const priceOrder = async (input: PlaceOrderInput, catalog: CatalogClient): Promise<OrderItem[]> =>
   Promise.all(
     input.items.map(async (item) => {

@@ -1,11 +1,11 @@
-// Lösung ms-api-contracts
+// Reference solution ms-api-contracts
 import express from 'express'
 import { z } from 'zod'
 import { Order, PlaceOrderInput } from '@werkstatt/contracts'
 
 const Problem = z.object({ type: z.string(), title: z.string(), status: z.number().int(), detail: z.string().optional() })
 
-/** OpenAPI 3.1 nutzt JSON Schema 2020-12 – genau das erzeugt z.toJSONSchema. */
+/** OpenAPI 3.1 uses JSON Schema 2020-12 – exactly what z.toJSONSchema produces. */
 export const openApiDocument = () => ({
   openapi: '3.1.0',
   info: { title: 'orders', version: '1.0.0' },

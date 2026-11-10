@@ -1,4 +1,4 @@
-// Lösung ms-resilience
+// Reference solution ms-resilience
 import { createHash } from 'node:crypto'
 import { setTimeout as delay } from 'node:timers/promises'
 import type { RequestHandler } from 'express'
@@ -12,7 +12,7 @@ export class HttpError extends Error {
   }
 }
 
-/** Nur vorübergehende Fehler wiederholen: Netz, Timeout, 429, 502, 503, 504. */
+/** Retry only transient errors: network, timeout, 429, 502, 503, 504. */
 export const isRetryable = (error: unknown): boolean =>
   error instanceof HttpError
     ? [429, 502, 503, 504].includes(error.status)
@@ -26,7 +26,7 @@ export type RetryOptions = {
   sleep?: (ms: number) => Promise<unknown>
 }
 
-/** Exponential Backoff mit Full Jitter: Wartezeit zufällig zwischen 0 und min(maxMs, baseMs · 2^n). */
+/** Exponential Backoff with Full Jitter: random wait between 0 and min(maxMs, baseMs · 2^n). */
 export const withRetry = async <T>(
   fn: (attempt: number) => Promise<T>,
   { retries = 3, baseMs = 100, maxMs = 2000, random = Math.random, sleep = delay }: RetryOptions = {},
@@ -43,7 +43,7 @@ export const withRetry = async <T>(
 
 type Stored = { fingerprint: string; status: number; body: unknown }
 
-/** Idempotency-Key: derselbe Schlüssel mit demselben Body liefert dieselbe Antwort, ohne erneut zu wirken. */
+/** Idempotency-Key: the same key with the same body returns the same response without taking effect again. */
 export const idempotency = (store = new Map<string, Stored>()): RequestHandler => (req, res, next) => {
   const key = req.get('idempotency-key')
   if (!key) return next()

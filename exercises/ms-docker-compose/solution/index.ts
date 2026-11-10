@@ -1,4 +1,4 @@
-// Lösung ms-docker-compose
+// Reference solution ms-docker-compose
 import { Router, type Express } from 'express'
 import type { AddressInfo } from 'node:net'
 import { setTimeout as sleep } from 'node:timers/promises'
@@ -6,7 +6,7 @@ import { setTimeout as sleep } from 'node:timers/promises'
 export type Checks = Record<string, () => boolean | Promise<boolean>>
 export type State = { draining: boolean }
 
-/** live: der Prozess läuft. ready: er kann Requests bedienen (Abhängigkeiten da, kein Shutdown). */
+/** live: the process is running. ready: it can serve requests (dependencies present, no shutdown). */
 export const healthRouter = (checks: Checks, state: State) =>
   Router()
     .get('/health/live', (req, res) => {
@@ -20,7 +20,7 @@ export const healthRouter = (checks: Checks, state: State) =>
       res.status(ready ? 200 : 503).json({ status: ready ? 'ready' : 'not ready', draining: state.draining, checks: results })
     })
 
-/** Graceful Shutdown: erst nicht mehr ready melden, dann laufende Requests beenden lassen. */
+/** Graceful shutdown: first stop reporting ready, then let in-flight requests finish. */
 export const serve = (app: Express, state: State, { port = 0, drainMs = 1000 } = {}) =>
   new Promise<{ url: string; shutdown: () => Promise<void> }>((resolve) => {
     const server = app.listen(port, () => {
@@ -37,7 +37,7 @@ export const serve = (app: Express, state: State, { port = 0, drainMs = 1000 } =
     })
   })
 
-/** Docker stoppt Container mit SIGTERM. Ohne Handler wartet es 10 s und schickt dann SIGKILL. */
+/** Docker stops containers with SIGTERM. Without a handler it waits 10 s and then sends SIGKILL. */
 export const onStopSignal = (shutdown: () => Promise<void>) => {
   for (const signal of ['SIGTERM', 'SIGINT'] as const)
     process.once(signal, () => {

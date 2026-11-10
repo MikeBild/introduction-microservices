@@ -1,4 +1,4 @@
-// Kleine Helfer ohne Zusatzpaket: node:http, node:sqlite und console reichen.
+// Small helpers without extra packages: node:http, node:sqlite and console are enough.
 import type { AddressInfo } from 'node:net'
 import type { Server } from 'node:http'
 import { Database } from 'node:sqlite'
@@ -6,7 +6,7 @@ import { Router } from 'express'
 
 export { enqueue, firstDelivery, messagingSchema, relayOnce, startRelay } from './messaging.ts'
 
-/** /health/live und /health/ready – siehe Lektion ms-docker-compose. */
+/** /health/live and /health/ready – see lesson ms-docker-compose. */
 export const health = (service: string, ready: () => boolean = () => true) =>
   Router()
     .get('/health/live', (req, res) => {
@@ -21,7 +21,7 @@ type Listenable = { listen: (port: number, callback: () => void) => Server }
 
 export type Running = { url: string; server: Server; [Symbol.asyncDispose]: () => Promise<void> }
 
-/** Startet eine App auf einem freien Port. Mit `await using` schließt der Server am Ende selbst. */
+/** Starts an app on a free port. With `await using` the server closes itself at the end. */
 export const listen = (app: Listenable, port = 0): Promise<Running> =>
   new Promise((resolve) => {
     const server = app.listen(port, () => {
@@ -38,7 +38,7 @@ export const listen = (app: Listenable, port = 0): Promise<Running> =>
     })
   })
 
-/** Öffnet eine SQLite-Datenbank (Datei oder ':memory:') und legt das Schema an. */
+/** Opens a SQLite database (file or ':memory:') and creates the schema. */
 export const openDb = (path: string, schema: string): Database => {
   const db = new Database(path)
   db.exec('PRAGMA journal_mode = WAL;')
@@ -46,7 +46,7 @@ export const openDb = (path: string, schema: string): Database => {
   return db
 }
 
-/** Führt fn in einer Transaktion aus: alles oder nichts. */
+/** Runs fn in a transaction: all or nothing. */
 export const transaction = <T>(db: Database, fn: () => T): T => {
   db.exec('BEGIN')
   try {
@@ -59,12 +59,12 @@ export const transaction = <T>(db: Database, fn: () => T): T => {
   }
 }
 
-/** Ein JSON-Log je Zeile auf stdout – Docker und jede Log-Plattform lesen das direkt. */
+/** One JSON log per line on stdout – Docker and every log platform read that directly. */
 export const log = (level: 'info' | 'warn' | 'error', message: string, fields: Record<string, unknown> = {}) => {
   console.log(JSON.stringify({ time: new Date().toISOString(), level, message, ...fields }))
 }
 
-/** Wartet, bis check() true liefert (für Tests mit asynchronen Events). */
+/** Waits until check() returns true (for tests with asynchronous events). */
 export const eventually = async (check: () => boolean | Promise<boolean>, timeoutMs = 2000, stepMs = 20) => {
   const until = Date.now() + timeoutMs
   while (Date.now() < until) {

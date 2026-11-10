@@ -38,14 +38,14 @@ const call = (url: string, bearer?: string) =>
   fetch(`${url}/reservations`, { method: 'POST', headers: bearer ? { authorization: `Bearer ${bearer}` } : {} })
 
 describe('service-to-service auth', () => {
-  it('lässt orders mit gültigem Token durch', async () => {
+  it('lets orders through with a valid token', async () => {
     await using api = await listen(inventoryApp())
     const response = await call(api.url, token())
     expect(response.status).toBe(201)
     expect(await response.json()).toEqual({ caller: 'orders' })
   })
 
-  it('401 ohne Token, mit fremder Signatur oder abgelaufen', async () => {
+  it('401 without a token, with a foreign signature or expired', async () => {
     await using api = await listen(inventoryApp())
     expect((await call(api.url)).status).toBe(401)
     expect((await call(api.url, token({ privateKey: attacker.privateKey }))).status).toBe(401)
@@ -54,14 +54,14 @@ describe('service-to-service auth', () => {
     expect((await call(api.url, token({ issuer: 'https://evil.example' }))).status).toBe(401)
   })
 
-  it('401 bei manipuliertem Inhalt', async () => {
+  it('401 on tampered content', async () => {
     await using api = await listen(inventoryApp())
     const [header, , signature] = token().split('.')
     const forged = Buffer.from(JSON.stringify({ iss: 'https://auth.werkstatt.example', sub: 'orders', aud: 'inventory', exp: 9_999_999_999 })).toString('base64url')
     expect((await call(api.url, `${header}.${forged}.${signature}`)).status).toBe(401)
   })
 
-  it('403, wenn das Token nicht für inventory ist oder der Aufrufer nicht erlaubt', async () => {
+  it('403 if the token is not for inventory or the caller is not allowed', async () => {
     await using api = await listen(inventoryApp())
     expect((await call(api.url, token({ audience: 'payments' }))).status).toBe(403)
     expect((await call(api.url, token({ subject: 'catalog' }))).status).toBe(403)

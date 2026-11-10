@@ -1,5 +1,5 @@
-// Modul orders
-// Fallstrick: Der Import greift in die Interna von catalog – die Grenze existiert nur im Kopf.
+// Module orders
+// Pitfall: the import reaches into the internals of catalog – the boundary exists only in your head.
 import { priceOf } from '../catalog/internal/prices.ts'
 import { total } from './internal/total.ts'
 

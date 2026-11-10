@@ -1,18 +1,18 @@
-// Lektion ms-contract-testing: Contract Tests statt End-to-End-Zoo
-// Dauer: etwa 25 Minuten
+// Lesson ms-contract-testing: Contract tests instead of an end-to-end zoo
+// Duration: about 25 minutes
 //
-// Consumer-Driven Contracts: orders (Consumer) schreibt auf, was es von catalog (Provider) braucht.
-// Derselbe Vertrag treibt zwei Tests: orders testet gegen einen Stub, catalog prüft seine echte App.
-// So merkt catalog vor dem Deployment, wenn es orders bricht – ohne dass alle Services laufen.
+// Consumer-Driven Contracts: orders (consumer) writes down what it needs from catalog (provider).
+// The same contract drives two tests: orders tests against a stub, catalog checks its real app.
+// This way catalog notices before the Deployment when it breaks orders – without all services running.
 //
-// Aufgabe:
-// 1. Ergänze catalogContract um die Interaktion „unbekanntes Produkt“: GET /products/p-unknown → 404.
-// 2. stubFromContract(contract): Express-App, die für jede Interaktion mit status und example antwortet.
-//    Prüfe vorher jedes example gegen sein schema – ein falsches Beispiel ist ein Fehler im Vertrag.
-// 3. verifyProvider(app, contract): Starte die App (listen aus @werkstatt/kit), spiele jede Interaktion ab
-//    und liefere je Interaktion { description, ok, problem? }. Status muss passen, Body zum schema.
+// Task:
+// 1. Add the interaction “unknown product” to catalogContract: GET /products/p-unknown → 404.
+// 2. stubFromContract(contract): an Express app that answers each interaction with status and example.
+//    First check every example against its schema – a wrong example is an error in the contract.
+// 3. verifyProvider(app, contract): start the app (listen from @werkstatt/kit), replay every interaction
+//    and return { description, ok, problem? } per interaction. The status must match, the body must match the schema.
 //
-// Prüfen: npm test -- ms-contract-testing
+// Check: npm test -- ms-contract-testing
 import express, { type Express } from 'express'
 import { z } from 'zod'
 import { listen } from '@werkstatt/kit'
@@ -24,7 +24,7 @@ export type Interaction = {
 }
 export type Contract = { consumer: string; provider: string; interactions: Interaction[] }
 
-// Der Consumer beschreibt nur, was er wirklich nutzt: id und priceCents, nicht name.
+// The consumer describes only what it really uses: id and priceCents, not name.
 const PriceView = z.object({ id: z.string(), priceCents: z.number().int().min(0) })
 
 export const catalogContract: Contract = {
@@ -36,7 +36,7 @@ export const catalogContract: Contract = {
       request: { method: 'GET', path: '/products/p-1' },
       response: { status: 200, schema: PriceView, example: { id: 'p-1', name: 'Hammer', priceCents: 1299 } },
     },
-    // TODO: unbekanntes Produkt → 404
+    // TODO: unknown product → 404
   ],
 }
 

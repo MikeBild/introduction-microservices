@@ -1,33 +1,33 @@
-// Lektion ms-context-cut: Ein Service je Bounded Context, nicht je Entity
-// Dauer: etwa 25 Minuten
+// Lesson ms-context-cut: One service per Bounded Context, not per entity
+// Duration: about 25 minutes
 //
-// Ein Vorschlag für den Werkstatt-Shop liegt vor: ProductService, OrderService, CustomerService –
-// ein Service je Entity. Du schneidest neu nach Bounded Contexts und begründest jeden Context.
+// There is a proposal for the workshop shop: ProductService, OrderService, CustomerService –
+// one service per entity. You cut again along Bounded Contexts and justify each context.
 //
-// Fakten aus dem Gespräch mit den Fachleuten:
-// - Summe und Status einer Bestellung brauchen Positionen und Preise sofort → Order und OrderItem zusammen.
-// - Eine Reservierung ändert den Bestand in derselben Transaktion → StockItem und Reservation zusammen.
-// - „Product“ heißt im Verkauf Name und Preis, im Lager Bestand → Price und StockItem getrennt.
-// - Eine Sendung hat eine Adresse, aber keinen Preis → Shipment nie beim Price.
+// Facts from the conversation with the domain experts:
+// - Total and status of an order need line items and prices immediately → Order and OrderItem together.
+// - A reservation changes the stock in the same transaction → StockItem and Reservation together.
+// - “Product” means name and price in sales, stock in inventory → Price and StockItem separate.
+// - A shipment has an address but no price → Shipment never with Price.
 //
-// Schnitt-Check vor jedem Service:
+// Cut check before each service:
 //
-// | Frage                                  | ja              | nein          |
-// |----------------------------------------|-----------------|---------------|
-// | Wechselt ein Wort die Bedeutung?       | weiter prüfen   | Modul         |
-// | Müssen Regeln sofort gemeinsam gelten? | Modul           | weiter prüfen |
-// | Ändert es sich meist im selben Commit? | Modul           | weiter prüfen |
-// | Eigenes Team oder eigene Last?         | eigener Service | Modul         |
+// | Question                                  | yes           | no            |
+// |-------------------------------------------|---------------|---------------|
+// | Does a word change its meaning?           | keep checking | module        |
+// | Must rules hold together immediately?     | module        | keep checking |
+// | Does it mostly change in the same commit? | module        | keep checking |
+// | Own team or own load?                     | own service   | module        |
 //
-// Aufgabe:
-// 1. checkContextMap(map, known): meldet jede Entity aus known ohne oder mit mehreren Besitzern (rule 'owner'),
-//    jede Kante über eine gemeinsame Datenbank (rule 'database') und jede Kante zu einem Context,
-//    den die Map nicht kennt (rule 'unknown-context'). detail nennt die Entity bzw. die Contexts.
-// 2. contextMap: dein Schnitt. Jede Entity aus `entities` gehört genau einem Context, Kanten nur per http oder events.
-// 3. decisions/<context>.md: ein kurzes ADR je Context mit den Abschnitten „## Kontext“, „## Entscheidung“
-//    und „## Verworfen“ (Vorlage in decisions/_template.md).
+// Task:
+// 1. checkContextMap(map, known): reports every entity from known with no owner or several owners (rule 'owner'),
+//    every edge through a shared database (rule 'database') and every edge to a context
+//    that the map does not know (rule 'unknown-context'). detail names the entity or the contexts.
+// 2. contextMap: your cut. Every entity from `entities` belongs to exactly one context, edges only via http or events.
+// 3. decisions/<context>.md: a short ADR per context with the sections “## Kontext”, “## Entscheidung”
+//    and “## Verworfen” (template in decisions/_template.md).
 //
-// Prüfen: npm test -- ms-context-cut
+// Check: npm test -- ms-context-cut
 import { fileURLToPath } from 'node:url'
 
 export const decisionsDir = fileURLToPath(new URL('./decisions', import.meta.url))
@@ -50,7 +50,7 @@ export type Edge = { from: string; to: string; via: 'http' | 'events' | 'databas
 export type ContextMap = { contexts: Record<string, { owns: readonly Entity[] }>; edges: readonly Edge[] }
 export type Issue = { rule: 'owner' | 'database' | 'unknown-context'; detail: string }
 
-/** Der Vorschlag: ein Service je Entity. Reservation braucht jeder, und der OrderService liest die Tabelle products direkt. */
+/** The proposal: one service per entity. Everyone needs Reservation, and the OrderService reads the table products directly. */
 export const proposal: ContextMap = {
   contexts: {
     ProductService: { owns: ['Product', 'Price', 'StockItem', 'Reservation'] },
@@ -67,5 +67,5 @@ export const checkContextMap = (map: ContextMap, known: readonly string[] = enti
   throw new Error('TODO: Besitzer je Entity, Kanten über die Datenbank und unbekannte Contexts melden')
 }
 
-// TODO: dein Schnitt nach Bounded Contexts – beginn bei der Sprache, nicht bei den Tabellen
+// TODO: your cut along Bounded Contexts – start with the language, not with the tables
 export const contextMap: ContextMap = proposal

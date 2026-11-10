@@ -1,4 +1,4 @@
-// Lösung ms-outbox
+// Reference solution ms-outbox
 import { randomUUID } from 'node:crypto'
 import { openDb, transaction } from '@werkstatt/kit'
 import type { Order, ShopEvent } from '@werkstatt/contracts'
@@ -15,7 +15,7 @@ export const createOrderStore = (path = ':memory:') => {
   const markPublished = db.prepare('UPDATE outbox SET published_at = ? WHERE seq = ?')
 
   return {
-    /** Bestellung und Event in einer Transaktion: beides oder nichts. */
+    /** Order and event in one transaction: both or nothing. */
     placeOrder(order: Order) {
       const event: ShopEvent = {
         id: randomUUID(),
@@ -29,7 +29,7 @@ export const createOrderStore = (path = ':memory:') => {
       })
     },
 
-    /** Relay: veröffentlicht in Reihenfolge, markiert erst nach Erfolg, bricht beim ersten Fehler ab. */
+    /** Relay: publishes in order, marks only after success, stops at the first error. */
     async relay(publish: (event: ShopEvent) => Promise<void>, batchSize = 100): Promise<number> {
       let published = 0
       for (const row of pending.all(batchSize) as Array<{ seq: number; event: string }>) {

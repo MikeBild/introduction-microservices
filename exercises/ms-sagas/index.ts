@@ -1,20 +1,20 @@
-// Lektion ms-sagas: Sagas ersetzen verteilte Transaktionen
-// Dauer: etwa 25 Minuten
+// Lesson ms-sagas: Sagas replace distributed transactions
+// Duration: about 25 minutes
 //
-// Eine Bestellung läuft durch drei Services: orders → inventory (Bestand) → payment (Zahlung).
-// Es gibt keine Transaktion über alle. Die Saga in orders reagiert auf Nachrichten und löst
-// Folgeschritte oder Kompensationen aus. Sie ist eine Pure Function: Zustand + Nachricht → Zustand + Effekte.
+// An order runs through three services: orders → inventory → payment.
+// There is no transaction across all of them. The saga in orders reacts to messages and triggers
+// follow-up steps or compensations. It is a Pure Function: state + message → state + effects.
 //
-// Aufgabe: Implementiere react(state, message).
-// - StockReserved (placed, Bestand pending)  → stock 'reserved', Effekt CapturePayment
-// - StockRejected (placed, Bestand pending)  → status 'cancelled', Effekt OrderCancelled (reason 'out of stock: <productId>')
-// - PaymentCaptured (placed, Bestand reserviert) → status 'paid'
-// - PaymentFailed (placed) → status 'cancelled'; war Bestand reserviert: Kompensation ReleaseStock und stock 'released';
-//   dann OrderCancelled (reason 'payment failed: <reason>')
-// - StockReserved kommt erst nach der Stornierung → ReleaseStock, stock 'released'
-// - Alles andere (Duplikate, Nachzügler) → Zustand unverändert, keine Effekte
+// Task: Implement react(state, message).
+// - StockReserved (placed, stock pending)  → stock 'reserved', effect CapturePayment
+// - StockRejected (placed, stock pending)  → status 'cancelled', effect OrderCancelled (reason 'out of stock: <productId>')
+// - PaymentCaptured (placed, stock reserved) → status 'paid'
+// - PaymentFailed (placed) → status 'cancelled'; if stock was reserved: compensation ReleaseStock and stock 'released';
+//   then OrderCancelled (reason 'payment failed: <reason>')
+// - StockReserved arrives only after the cancellation → ReleaseStock, stock 'released'
+// - Everything else (duplicates, latecomers) → state unchanged, no effects
 //
-// Prüfen: npm test -- ms-sagas
+// Check: npm test -- ms-sagas
 export type SagaState = {
   orderId: string
   status: 'placed' | 'paid' | 'cancelled'
@@ -37,7 +37,7 @@ export const start = (orderId: string): SagaState => ({ orderId, status: 'placed
 export const react = (state: SagaState, message: SagaMessage): { state: SagaState; effects: Effect[] } => {
   switch (message.type) {
     case 'StockReserved':
-      // Fallstrick: nur den Happy Path bauen
+      // Pitfall: building only the happy path
       return { state: { ...state, stock: 'reserved' }, effects: [{ type: 'CapturePayment', orderId: state.orderId }] }
     default:
       throw new Error(`TODO: ${message.type}`)

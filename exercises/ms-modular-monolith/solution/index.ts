@@ -1,4 +1,4 @@
-// Lösung ms-modular-monolith
+// Reference solution ms-modular-monolith
 import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -9,7 +9,7 @@ export type Violation = { file: string; imports: string }
 
 const importPattern = /(?:import|export)[^'"]*?from\s+['"]([^'"]+)['"]/g
 
-/** Ein Modul darf von einem anderen Modul nur dessen index.ts importieren. */
+/** A module may import only the index.ts of another module. */
 export const checkBoundaries = (root: string): Violation[] => {
   const modulesDir = join(root, 'modules')
   const moduleOf = (file: string) => relative(modulesDir, file).split(sep)[0]

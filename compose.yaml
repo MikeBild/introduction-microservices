@@ -1,5 +1,5 @@
-# Der Werkstatt-Shop: drei Services, je mit eigener Datenbank (Volume) und Health Check.
-# Starten: npm run up   ·   Stoppen: npm run down
+# The workshop shop: three services, each with its own database (volume) and health check.
+# Start: npm run up   ·   Stop: npm run down
 name: werkstatt
 
 x-healthcheck: &healthcheck

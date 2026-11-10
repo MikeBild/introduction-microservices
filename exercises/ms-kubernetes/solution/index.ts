@@ -1,4 +1,4 @@
-// Lösung ms-kubernetes
+// Reference solution ms-kubernetes
 export type ServiceSpec = { name: string; image: string; port: number; replicas?: number; env?: Record<string, string> }
 
 const probe = (path: string, port: number, periodSeconds: number) => ({
@@ -7,7 +7,7 @@ const probe = (path: string, port: number, periodSeconds: number) => ({
   failureThreshold: 3,
 })
 
-/** Deployment und Service als Objekte. kubectl apply -f akzeptiert JSON genauso wie YAML. */
+/** Deployment and Service as objects. kubectl apply -f accepts JSON just like YAML. */
 export const manifests = ({ name, image, port, replicas = 2, env = {} }: ServiceSpec) => {
   const labels = { 'app.kubernetes.io/name': name, 'app.kubernetes.io/part-of': 'werkstatt' }
   return [
@@ -45,7 +45,7 @@ export const manifests = ({ name, image, port, replicas = 2, env = {} }: Service
   ]
 }
 
-/** Als List-Objekt für eine Datei: node exercises/ms-kubernetes/solution/index.ts > catalog.json */
+/** As a List object for one file: node exercises/ms-kubernetes/solution/index.ts > catalog.json */
 export const asList = (items: unknown[]) => ({ apiVersion: 'v1', kind: 'List', items })
 
 if (import.meta.main) {

@@ -1,5 +1,5 @@
-# Lösung: Health Checks und Startreihenfolge nach Bereitschaft.
-# Starten: docker compose -f exercises/ms-docker-compose/solution/compose.yaml up --build --wait
+# Reference solution: health checks and start order by readiness.
+# Start: docker compose -f exercises/ms-docker-compose/solution/compose.yaml up --build --wait
 name: werkstatt-uebung
 
 x-healthcheck: &healthcheck

@@ -1,4 +1,4 @@
-// Lösung ms-first-service
+// Reference solution ms-first-service
 import express from 'express'
 import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'

@@ -1,19 +1,19 @@
-// Lektion ms-docker-compose: Das ganze System mit einem Befehl starten
-// Dauer: etwa 25 Minuten
+// Lesson ms-docker-compose: Start the whole system with one command
+// Duration: about 25 minutes
 //
-// Docker Compose startet catalog, inventory und orders. Damit orders erst startet, wenn catalog
-// wirklich bereit ist, brauchen die Services Health Checks – und einen sauberen Shutdown.
+// Docker Compose starts catalog, inventory and orders. So that orders only starts once catalog
+// is really ready, the services need health checks – and a clean shutdown.
 //
-// Aufgabe:
-// 1. healthRouter(checks, state): GET /health/live liefert immer 200.
-//    GET /health/ready führt alle checks aus: alle true und kein Shutdown → 200, sonst 503.
-//    Ein check, der wirft, zählt als false.
-// 2. serve(app, state, { port, drainMs }): startet den Server und liefert { url, shutdown }.
-//    shutdown setzt state.draining, wartet drainMs und schließt den Server. Laufende Requests laufen zu Ende.
-// 3. compose.yaml in diesem Ordner: Ergänze für jeden Service einen healthcheck auf /health/ready und
-//    starte orders erst, wenn catalog und inventory healthy sind (depends_on mit condition).
+// Task:
+// 1. healthRouter(checks, state): GET /health/live always returns 200.
+//    GET /health/ready runs all checks: all true and no shutdown → 200, otherwise 503.
+//    A check that throws counts as false.
+// 2. serve(app, state, { port, drainMs }): starts the server and returns { url, shutdown }.
+//    shutdown sets state.draining, waits drainMs and closes the server. In-flight requests run to completion.
+// 3. compose.yaml in this folder: add a healthcheck on /health/ready for each service and
+//    start orders only when catalog and inventory are healthy (depends_on with condition).
 //
-// Prüfen: npm test -- ms-docker-compose   und   docker compose -f exercises/ms-docker-compose/compose.yaml config
+// Check: npm test -- ms-docker-compose   and   docker compose -f exercises/ms-docker-compose/compose.yaml config
 import { Router, type Express } from 'express'
 import type { AddressInfo } from 'node:net'
 
@@ -30,7 +30,7 @@ export const serve = (app: Express, state: State, { port = 0, drainMs = 1000 } =
   new Promise<{ url: string; shutdown: () => Promise<void> }>((resolve) => {
     const server = app.listen(port, () => {
       const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}`
-      // Fallstrick: hart beenden, laufende Requests brechen ab
+      // Pitfall: hard stop, in-flight requests are cut off
       const shutdown = async () => {
         void drainMs
         server.closeAllConnections()

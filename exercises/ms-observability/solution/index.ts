@@ -1,4 +1,4 @@
-// Lösung ms-observability
+// Reference solution ms-observability
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { randomBytes } from 'node:crypto'
 import type { RequestHandler } from 'express'
@@ -8,7 +8,7 @@ export type TraceContext = { traceId: string; spanId: string }
 const storage = new AsyncLocalStorage<TraceContext>()
 const hex = (bytes: number) => randomBytes(bytes).toString('hex')
 
-/** W3C Trace Context: version-traceid-parentid-flags, z. B. 00-<32 hex>-<16 hex>-01 */
+/** W3C Trace Context: version-traceid-parentid-flags, for example 00-<32 hex>-<16 hex>-01 */
 export const parseTraceparent = (header: string | undefined): TraceContext | undefined => {
   const match = /^00-([0-9a-f]{32})-([0-9a-f]{16})-[0-9a-f]{2}$/.exec(header ?? '')
   if (!match?.[1] || !match[2] || /^0+$/.test(match[1]) || /^0+$/.test(match[2])) return undefined
@@ -17,7 +17,7 @@ export const parseTraceparent = (header: string | undefined): TraceContext | und
 
 export const formatTraceparent = ({ traceId, spanId }: TraceContext) => `00-${traceId}-${spanId}-01`
 
-/** Übernimmt die Trace-ID vom Aufrufer oder beginnt einen neuen Trace. Jeder Service bekommt eine eigene Span-ID. */
+/** Takes over the trace ID from the caller or starts a new trace. Each service gets its own span ID. */
 export const tracing: RequestHandler = (req, res, next) => {
   const incoming = parseTraceparent(req.get('traceparent'))
   const context = { traceId: incoming?.traceId ?? hex(16), spanId: hex(8) }
@@ -34,7 +34,7 @@ export const log = (level: 'info' | 'warn' | 'error', message: string, fields: R
   )
 }
 
-/** fetch, das den aktuellen Trace an den nächsten Service weitergibt. */
+/** fetch that passes the current trace on to the next service. */
 export const tracedFetch = (input: string, init: RequestInit = {}) => {
   const trace = currentTrace()
   const headers = new Headers(init.headers)

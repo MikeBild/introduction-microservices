@@ -1,10 +1,10 @@
-// Lösung ms-why
+// Reference solution ms-why
 export type Commit = { id: string; modules: readonly string[] }
 export type Coupling = { a: string; b: string; together: number; ratio: number }
 
 const pairKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`)
 
-/** Wie oft ändern sich zwei Module im selben Commit? ratio = gemeinsam / Commits des selteneren Moduls */
+/** How often do two modules change in the same commit? ratio = together / commits of the rarer module */
 export const changeCoupling = (commits: readonly Commit[]): Coupling[] => {
   const perModule = new Map<string, number>()
   const perPair = new Map<string, number>()
@@ -23,7 +23,7 @@ export const changeCoupling = (commits: readonly Commit[]): Coupling[] => {
     .sort((x, y) => y.ratio - x.ratio || y.together - x.together)
 }
 
-/** Module, die sich meist gemeinsam ändern, gehören in denselben Service. */
+/** Modules that mostly change together belong in the same service. */
 export const keepTogether = (commits: readonly Commit[], threshold = 0.5): Array<[string, string]> =>
   changeCoupling(commits)
     .filter((coupling) => coupling.ratio >= threshold)

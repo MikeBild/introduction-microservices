@@ -1,28 +1,28 @@
-// Lektion ms-rest-ddd: Eine REST-API spricht die Sprache ihres Bounded Context
-// Dauer: etwa 25 Minuten
+// Lesson ms-rest-ddd: A REST API speaks its Bounded Context language
+// Duration: about 25 minutes
 //
-// Der Context Versand bekommt seine eigene API. Das Aggregate ist die Sendung (Shipment), die Commands
-// heißen dispatch (Übergabe an den Paketdienst) und deliver (Zustellung). Der Startpunkt hat ein
-// generisches PATCH /shipments/:id, das jeden Status schreibt. Die Regel steht nirgends, also gilt sie nirgends.
+// The shipping context gets its own API. The Aggregate is the shipment (Shipment), the Commands
+// are called dispatch (handover to the parcel carrier) and deliver (delivery). The starting point has a
+// generic PATCH /shipments/:id that writes any status. The rule is written down nowhere, so it applies nowhere.
 //
-// | DDD            | REST-API des Context                                  |
-// |----------------|-------------------------------------------------------|
-// | Aggregate Root | Ressource: GET /shipments/:id                         |
-// | Command        | Aktion: POST /shipments/:id/dispatch, …/deliver       |
-// | Query          | Read-Modell: GET /shipments?status=preparing          |
-// | Regelverstoß   | 409 application/problem+json, ein type je Regel       |
-// | Fremder Context| nur die ID: orderId                                   |
+// | DDD             | REST API of the context                               |
+// |-----------------|-------------------------------------------------------|
+// | Aggregate Root  | Resource: GET /shipments/:id                          |
+// | Command         | Action: POST /shipments/:id/dispatch, …/deliver       |
+// | Query           | Read model: GET /shipments?status=preparing           |
+// | Rule violation  | 409 application/problem+json, one type per rule       |
+// | Foreign context | only the ID: orderId                                  |
 //
-// Aufgabe:
-// 1. dispatch(shipment, { trackingNumber }) und deliver(shipment) als Pure Functions: neue Sendung oder Rejection.
-//    dispatch nur aus 'preparing', deliver nur aus 'dispatched'. Die übergebene Sendung bleibt unverändert.
-// 2. problem(res, status, code, detail): Problem Details nach RFC 9457 mit type 'urn:werkstatt:problem:<code>',
-//    title aus `titles`, status, detail und instance (res.req.originalUrl), Content-Type application/problem+json.
-// 3. POST /shipments/:id/dispatch und POST /shipments/:id/deliver: Body mit zod prüfen (400), unbekannte
-//    Sendung (404), Regelverstoß (409). Die Antwort auf einen Command ist die Sendung danach.
-// 4. GET /shipments?status=preparing als Read-Modell. Entferne PATCH /shipments/:id.
+// Task:
+// 1. dispatch(shipment, { trackingNumber }) and deliver(shipment) as Pure Functions: new shipment or Rejection.
+//    dispatch only from 'preparing', deliver only from 'dispatched'. The shipment passed in stays unchanged.
+// 2. problem(res, status, code, detail): Problem Details per RFC 9457 with type 'urn:werkstatt:problem:<code>',
+//    title from `titles`, status, detail and instance (res.req.originalUrl), Content-Type application/problem+json.
+// 3. POST /shipments/:id/dispatch and POST /shipments/:id/deliver: validate the body with zod (400), unknown
+//    shipment (404), rule violation (409). The response to a Command is the shipment afterwards.
+// 4. GET /shipments?status=preparing as a read model. Remove PATCH /shipments/:id.
 //
-// Prüfen: npm test -- ms-rest-ddd
+// Check: npm test -- ms-rest-ddd
 import express, { type Response } from 'express'
 import { z } from 'zod'
 
@@ -61,7 +61,7 @@ export const titles: Record<string, string> = {
   'shipment-not-deliverable': 'Sendung kann nicht zugestellt werden',
 }
 
-/** Problem Details nach RFC 9457 – Fallstrick: type, title und instance fehlen, der Client kann nur raten. */
+/** Problem Details per RFC 9457 – pitfall: type, title and instance are missing, so the client can only guess. */
 export const problem = (res: Response, status: number, code: string, detail: string) => {
   void titles
   res.status(status).type('application/problem+json').json({ status, detail })
@@ -78,7 +78,7 @@ export const createShippingApi = ({ repository }: { repository: ShipmentReposito
     res.json(shipment)
   })
 
-  // Fallstrick: Der Client bestimmt den Status, keine Regel läuft.
+  // Pitfall: the client sets the status, no rule runs.
   app.patch('/shipments/:id', (req, res) => {
     const shipment = repository.get(req.params.id)
     if (!shipment) return problem(res, 404, 'shipment-not-found', `Sendung ${req.params.id} unbekannt`)
@@ -87,7 +87,7 @@ export const createShippingApi = ({ repository }: { repository: ShipmentReposito
     res.json(updated)
   })
 
-  // TODO: POST /shipments/:id/dispatch, POST /shipments/:id/deliver und GET /shipments?status=…
+  // TODO: POST /shipments/:id/dispatch, POST /shipments/:id/deliver and GET /shipments?status=…
 
   return app
 }

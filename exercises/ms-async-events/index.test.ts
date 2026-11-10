@@ -13,7 +13,7 @@ const deliver = (url: string, event: unknown) =>
   fetch(`${url}/inbox`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(event) })
 
 describe('inventory inbox', () => {
-  it('reserviert Bestand für OrderPlaced', async () => {
+  it('reserves stock for OrderPlaced', async () => {
     const inventory = createInventory()
     inventory.setStock('p-1', 10)
     await using api = await listen(inventory.app)
@@ -23,7 +23,7 @@ describe('inventory inbox', () => {
     expect(inventory.reservationOf('o-1')).toBe('reserved')
   })
 
-  it('wirkt bei doppelter Zustellung nur einmal', async () => {
+  it('takes effect only once on duplicate delivery', async () => {
     const inventory = createInventory()
     inventory.setStock('p-1', 10)
     await using api = await listen(inventory.app)
@@ -35,7 +35,7 @@ describe('inventory inbox', () => {
     expect(inventory.stockOf('p-1')?.reserved).toBe(3)
   })
 
-  it('reserviert nie nur einen Teil der Bestellung', async () => {
+  it('never reserves only part of the order', async () => {
     const inventory = createInventory()
     inventory.setStock('p-1', 10)
     inventory.setStock('p-2', 1)
@@ -45,7 +45,7 @@ describe('inventory inbox', () => {
     expect(inventory.reservationOf('o-2')).toBe('rejected')
   })
 
-  it('lehnt Bodys ab, die kein Event des Vertrags sind', async () => {
+  it('rejects bodies that are not an event of the contract', async () => {
     const inventory = createInventory()
     await using api = await listen(inventory.app)
     expect((await deliver(api.url, { type: 'OrderPlaced', data: {} })).status).toBe(400)

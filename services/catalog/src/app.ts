@@ -1,4 +1,4 @@
-// Service catalog: Produkte und Preise. Besitzt seine Daten allein (eigene SQLite-Datei).
+// Service catalog: products and prices. Owns its data alone (its own SQLite file).
 import express from 'express'
 import { health, openDb } from '@werkstatt/kit'
 import type { Product } from '@werkstatt/contracts'

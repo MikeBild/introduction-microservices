@@ -1,5 +1,5 @@
-// Service inventory: Bestand und Reservierungen. Reagiert auf OrderPlaced und OrderCancelled,
-// meldet StockReserved oder StockRejected über die eigene Outbox.
+// Service inventory: stock and reservations. Reacts to OrderPlaced and OrderCancelled,
+// reports StockReserved or StockRejected via its own outbox.
 import express from 'express'
 import { enqueue, firstDelivery, health, messagingSchema, openDb, transaction } from '@werkstatt/kit'
 import { ShopEvent, type EventOf } from '@werkstatt/contracts'
@@ -35,7 +35,7 @@ export const createInventory = ({ dbPath = ':memory:' } = {}) => {
     enqueue(db, 'StockReserved', { orderId: data.orderId })
   }
 
-  // Kompensation: Reservierungen einer stornierten Bestellung freigeben
+  // Compensation: release the reservations of a cancelled order
   const onOrderCancelled = ({ data }: EventOf<'OrderCancelled'>) => {
     const lines = db.prepare('SELECT product_id, quantity FROM reservations WHERE order_id = ?').all(data.orderId) as Array<{
       product_id: string

@@ -1,9 +1,9 @@
-// Verträge des Werkstatt-Shops (siehe README, Abschnitt „Der Werkstatt-Shop“).
-// Ein Vertrag gehört dem Service, der ihn anbietet. Hier liegen nur die veröffentlichten
-// Teile: Request- und Response-Bodys der APIs und die Events zwischen den Services.
+// Contracts of the workshop shop (see README, section “The workshop shop”).
+// A contract belongs to the service that offers it. Only the published parts live here:
+// request and response bodies of the APIs and the events between the services.
 import { z } from 'zod'
 
-// --- Katalog (Service catalog) ---------------------------------------------------------
+// --- Catalog (service catalog) ---------------------------------------------------------
 export const Product = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -11,7 +11,7 @@ export const Product = z.object({
 })
 export type Product = z.infer<typeof Product>
 
-// --- Bestellung (Service orders) -------------------------------------------------------
+// --- Order (service orders) ------------------------------------------------------------
 export const OrderItemInput = z.strictObject({
   productId: z.string().min(1),
   quantity: z.number().int().min(1),
@@ -42,8 +42,8 @@ export const Order = z.object({
 export type Order = z.infer<typeof Order>
 
 // --- Events ----------------------------------------------------------------------------
-// Jedes Event hat eine eindeutige id (für Idempotenz beim Empfänger), einen Typ in der
-// Vergangenheitsform und die fachlichen Daten.
+// Every event has a unique id (for idempotency at the receiver), a type in the
+// past tense and the domain data.
 const envelope = <T extends string, D extends z.ZodType>(type: T, data: D) =>
   z.object({ id: z.string().min(1), type: z.literal(type), occurredAt: z.iso.datetime(), data })
 

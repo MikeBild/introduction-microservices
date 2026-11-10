@@ -14,7 +14,7 @@ const app = (checks: Parameters<typeof healthRouter>[0], state: State) =>
     })
 
 describe('health checks', () => {
-  it('live ist immer 200, ready hängt an den Checks', async () => {
+  it('live is always 200, ready depends on the checks', async () => {
     let dbUp = false
     const state = { draining: false }
     const { url, shutdown } = await serve(app({ db: () => dbUp, cache: () => true }, state), state, { drainMs: 0 })
@@ -25,7 +25,7 @@ describe('health checks', () => {
     await shutdown()
   })
 
-  it('ein Check, der wirft, macht den Service nicht ready', async () => {
+  it('a check that throws does not make the service ready', async () => {
     const state = { draining: false }
     const failing = async () => {
       throw new Error('db down')
@@ -37,7 +37,7 @@ describe('health checks', () => {
 })
 
 describe('graceful shutdown', () => {
-  it('meldet sich beim Shutdown nicht mehr ready und beendet laufende Requests', async () => {
+  it('no longer reports ready during shutdown and finishes in-flight requests', async () => {
     const state = { draining: false }
     const { url, shutdown } = await serve(app({}, state), state, { drainMs: 100 })
     const inFlight = fetch(`${url}/slow`)
@@ -51,13 +51,13 @@ describe('graceful shutdown', () => {
 
 describe('compose.yaml', () => {
   const compose = readFileSync(composeFile, 'utf8').replace(/#.*$/gm, '')
-  it('hat für jeden Service einen Health Check auf /health/ready', () => {
+  it('has a health check on /health/ready for each service', () => {
     for (const port of [3001, 3002, 3003]) expect(compose).toContain(`localhost:${port}/health/ready`)
   })
-  it('startet orders erst, wenn catalog und inventory healthy sind', () => {
+  it('starts orders only when catalog and inventory are healthy', () => {
     expect(compose.match(/condition:\s*service_healthy/g)).toHaveLength(2)
   })
-  it('nutzt die Compose Specification ohne version', () => {
+  it('uses the Compose Specification without version', () => {
     expect(compose).not.toMatch(/^version:/m)
   })
 })

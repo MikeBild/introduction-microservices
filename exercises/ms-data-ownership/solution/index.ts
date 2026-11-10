@@ -1,11 +1,11 @@
-// Lösung ms-data-ownership
+// Reference solution ms-data-ownership
 import type { Database } from 'node:sqlite'
 import { openDb } from '@werkstatt/kit'
 
 export type ProductChanged = { productId: string; name: string; priceCents: number; version: number }
 export type ProductView = { productId: string; name: string; priceCents: number }
 
-/** orders hält eine eigene Kopie der Produktdaten, die es braucht – gefüllt aus Events von catalog. */
+/** orders keeps its own copy of the product data it needs – filled from events of catalog. */
 export const createProductReplica = (db: Database = openDb(':memory:', '')) => {
   db.exec(`CREATE TABLE IF NOT EXISTS product_view (
     product_id TEXT PRIMARY KEY, name TEXT NOT NULL, price_cents INTEGER NOT NULL, version INTEGER NOT NULL)`)
@@ -16,7 +16,7 @@ export const createProductReplica = (db: Database = openDb(':memory:', '')) => {
   const select = db.prepare('SELECT product_id, name, price_cents FROM product_view WHERE product_id = ?')
 
   return {
-    /** true, wenn die Änderung neuer war als der Stand der Kopie */
+    /** true if the change was newer than the state of the copy */
     apply(change: ProductChanged): boolean {
       return upsert.run(change.productId, change.name, change.priceCents, change.version).changes > 0
     },
