@@ -132,8 +132,8 @@ where it pays off, for example OpenTelemetry, a message broker or Pact.
 
 - Workshop (held in German): [“Microservices with Node.js, Express 5, and Docker Compose”](https://workshops.mikebild.dev/w/microservices/remote/)
 - Slides: [slides.mikebild.dev/introduction-microservices.en](https://slides.mikebild.dev/introduction-microservices.en.html)
-- PDF: [introduction-microservices.en.pdf](https://objects.upraft.mikebild.info/site-media/mikebild/decks/introduction-microservices/introduction-microservices.en.pdf)
-- Video: [introduction-microservices.en.mp4](https://objects.upraft.mikebild.info/site-media/mikebild/decks/introduction-microservices/introduction-microservices.en.mp4)
+- PDF: [introduction-microservices.en.pdf](https://media.mikebild.dev/site/mikebild/decks/introduction-microservices/introduction-microservices.en.pdf)
+- Video: [introduction-microservices.en.mp4](https://media.mikebild.dev/site/mikebild/decks/introduction-microservices/introduction-microservices.en.mp4)
 
 ## License
 
